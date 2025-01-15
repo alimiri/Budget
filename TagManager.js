@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, Button, Alert, StyleSheet } from 'react-native';
-import SQLite from 'react-native-sqlite-storage';
+import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabase({ name: 'tags.db', location: 'default' });
+const db = SQLite.openDatabaseSync('tags.db');
 
 const TagsManager = () => {
   const [tags, setTags] = useState([]);
@@ -19,81 +19,55 @@ const TagsManager = () => {
   }, [page, searchQuery]);
 
   const initializeDatabase = () => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS tags (id INTEGER PRIMARY KEY AUTOINCREMENT, tagName TEXT UNIQUE)',
-        [],
-        () => console.log('Table created successfully'),
-        (error) => console.error('Error creating table:', error)
-      );
-    });
+    if (!db) {
+      console.error('Database failed to open');
+      return;
+    }
+    db.execSync('CREATE TABLE IF NOT EXISTS tags (id INTEGER PRIMARY KEY AUTOINCREMENT, tagName TEXT UNIQUE);');
   };
 
   const fetchTags = () => {
+    if (!db) {
+      console.error('Database failed to open');
+      return;
+    }
     const offset = (page - 1) * pageSize;
     const query = searchQuery
       ? `SELECT * FROM tags WHERE tagName LIKE ? ORDER BY tagName ASC LIMIT ? OFFSET ?`
       : `SELECT * FROM tags ORDER BY tagName ASC LIMIT ? OFFSET ?`;
-
-    db.transaction((tx) => {
-      tx.executeSql(
-        query,
-        searchQuery ? [`%${searchQuery}%`, pageSize, offset] : [pageSize, offset],
-        (_, results) => {
-          const rows = results.rows;
-          const tagsList = [];
-          for (let i = 0; i < rows.length; i++) {
-            tagsList.push(rows.item(i));
-          }
-          setTags(tagsList);
-        },
-        (error) => console.error('Error fetching tags:', error)
-      );
-    });
+      console.log(1);
+    const rows = db.getAllSync(
+      query,
+      searchQuery ? [`%${searchQuery}%`, pageSize, offset] : [pageSize, offset]
+    );
+    console.log(rows);
+    const tagsList = [];
+    for (let i = 0; i < rows.length; i++) {
+      tagsList.push(rows[i]);
+    }
+    setTags(tagsList);
   };
 
   const addTag = () => {
     if (!newTag) return Alert.alert('Error', 'Tag name cannot be empty');
 
-    db.transaction((tx) => {
-      tx.executeSql(
-        'INSERT INTO tags (tagName) VALUES (?)',
-        [newTag],
-        () => {
-          setNewTag('');
-          fetchTags();
-        },
-        (error) => Alert.alert('Error', 'Tag name must be unique')
-      );
-    });
+    db.execSync(`INSERT INTO tags (tagName) VALUES ('${newTag}')`);
+    setNewTag('');
+    fetchTags();
   };
 
   const deleteTag = (id) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'DELETE FROM tags WHERE id = ?',
-        [id],
-        () => fetchTags(),
-        (error) => console.error('Error deleting tag:', error)
-      );
-    });
+    db.execSync(`DELETE FROM tags WHERE id = ${id}`);
+      fetchTags();
   };
 
   const updateTag = () => {
     if (!editTagName) return Alert.alert('Error', 'Tag name cannot be empty');
 
-    db.transaction((tx) => {
-      tx.executeSql(
-        'UPDATE tags SET tagName = ? WHERE id = ?',
-        [editTagName, editTagId],
-        () => {
-          setEditTagId(null);
-          setEditTagName('');
-          fetchTags();
-        },
-        (error) => console.error('Error updating tag:', error)
-      );
-    });
+    db.execSync(`UPDATE tags SET tagName = '${editTagName}' WHERE id = ${editTagId}`);
+      setEditTagId(null);
+      setEditTagName('');
+      fetchTags();
   };
 
   return (
