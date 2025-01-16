@@ -7,6 +7,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-na
 import TagManager from './TagManager';
 import Help from './Help';
 import Settings from './Settings';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Tab = createBottomTabNavigator();
 
@@ -67,11 +68,14 @@ const App = () => {
           },
         })}
       >
-        <Tab.Screen name="Tags">
-          {() => (
-            <TagManager columns={columns} autoPopup={autoPopup} />
+        <Tab.Screen
+          name="Tags"
+          children={() => (
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <TagManager columns={columns} autoPopup={autoPopup} />
+            </GestureHandlerRootView>
           )}
-        </Tab.Screen>
+        />
         <Tab.Screen name="Help" component={Help} />
         <Tab.Screen name="Settings">
           {() => (
