@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TagItem from './TagItem';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {
   View,
-  Text,
   TextInput,
   FlatList,
   Button,
@@ -22,18 +22,22 @@ const TagsManager = () => {
   const [icon, setIcon] = useState(null); // Store selected icon
   const pageSize = 10;
 
-  const [isEditing, setIsEditing] = useState(false);
+  const selectQuery = useRef(null);
+  const insertQuery = useRef(null);
+  const updateQuery = useRef(null);
+  const deleteQuery = useRef(null);
 
-  const handleEditToggle = () => {
-    setIsEditing((prev) => !prev);
-  };
+  useEffect(() => {
+    if(!editTagId) {
+      fetchTags();
+    }
+  }, [searchQuery]);
 
   useEffect(() => {
     initializeDatabase();
-    fetchTags();
-  }, [searchQuery]);
+  }, []);
 
-  const initializeDatabase = () => {
+  const initializeDatabase = async () => {
     db.execSync(
       'CREATE TABLE IF NOT EXISTS tags (id INTEGER PRIMARY KEY AUTOINCREMENT, tagName TEXT UNIQUE, icon TEXT);'
     );
@@ -41,39 +45,60 @@ const TagsManager = () => {
     if (!columns.includes('icon')) {
       db.execSync(`ALTER TABLE tags ADD COLUMN icon TEXT;`);
     }
+
+    selectQuery.current = await db.prepareAsync(`SELECT * FROM tags WHERE tagName LIKE ? ORDER BY tagName ASC LIMIT ?`);
+    insertQuery.current = await db.prepareAsync(`INSERT INTO tags (tagName, icon) VALUES (?, ?)`);
+    updateQuery.current = await db.prepareAsync(`UPDATE tags SET tagName = ?, icon = ? WHERE id = ?`);
+    deleteQuery.current = await db.prepareAsync(`DELETE FROM tags WHERE id = ?`);
+
+    fetchTags();
   };
 
-  const fetchTags = () => {
-    const query = searchQuery
-      ? `SELECT * FROM tags WHERE tagName LIKE ? ORDER BY tagName ASC LIMIT ?`
-      : `SELECT * FROM tags ORDER BY tagName ASC LIMIT ?`;
-
-    const rows = db.getAllSync(query, searchQuery ? [`%${searchQuery}%`, pageSize] : [pageSize]);
+  const fetchTags = async () => {
+    const result = await selectQuery.current.executeAsync([`%${searchQuery}%`, pageSize]);
+    const rows = await result.getAllAsync();
+    console.log(rows);
     setTags(rows);
   };
 
-  const addTag = () => {
+  const addTag = async () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
     if (tags.some((tag) => tag.tagName === searchQuery)) return;
-
-    db.execSync(`INSERT INTO tags (tagName, icon) VALUES (?, ?)`, [searchQuery, icon || null]);
+    await insertQuery.current.executeAsync([searchQuery, icon]);
     setSearchQuery('');
-    fetchTags();
   };
 
-  const updateTag = () => {
+  const updateTag = async () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
-
-    db.execSync(`UPDATE tags SET tagName = '${searchQuery}', icon = '${icon}' WHERE id = ${editTagId}`);
-    console.log('Updated tag:', searchQuery, icon, editTagId);
+    await updateQuery.current.executeAsync([searchQuery, icon, editTagId]);
     cancelEdit();
-    fetchTags();
   };
 
-  const handleDelete = (id) => {
-    db.execSync(`DELETE FROM tags WHERE id = ?`, [id]);
-    fetchTags();
-  };
+  const handleDelete = (id, cancelSwipe) => {
+    Alert.alert(
+        'Confirm Deletion',
+        'Are you sure you want to delete this tag?',
+        [
+            {
+                text: 'Cancel',
+                onPress: () => {
+                    if (cancelSwipe) cancelSwipe(); // Close swipe on cancel
+                },
+                style: 'cancel',
+            },
+            {
+                text: 'Delete',
+                onPress: async () => {
+                    await deleteQuery.current.executeAsync([id]); // Delete tag
+                    fetchTags(); // Refresh tags list
+                },
+                style: 'destructive',
+            },
+        ],
+        { cancelable: true }
+    );
+};
+
 
   const handleEdit = (id) => {
     const tag = tags.find((tag) => tag.id === id);
@@ -112,19 +137,37 @@ const TagsManager = () => {
           onChangeText={setSearchQuery}
         />
         {editTagId ? (
-          <>
-            <Button title="U" onPress={updateTag} />
-            <Button title="Cancel" onPress={cancelEdit} />
-          </>
+          <View style={styles.iconRow}>
+            {/* Checkmark Icon for Update */}
+            <Ionicons
+              name="checkmark"
+              size={24}
+              color="green"
+              onPress={updateTag}
+              style={styles.icon}
+            />
+            {/* Cancel Icon */}
+            <Ionicons
+              name="close"
+              size={24}
+              color="red"
+              onPress={cancelEdit}
+              style={styles.icon}
+            />
+          </View>
         ) : (
-          <Button
-            title="+"
+          <Ionicons
+            name="add-circle"
+            size={30}
+            color={!searchQuery || tags.some((tag) => tag.tagName === searchQuery) ? 'gray' : 'blue'}
             onPress={addTag}
+            style={styles.icon}
             disabled={!searchQuery || tags.some((tag) => tag.tagName === searchQuery)}
           />
         )}
       </View>
 
+      {/* Button for selecting an icon */}
       <Button title="Select Icon" onPress={selectIcon} />
 
       {/* Tag List */}
@@ -136,7 +179,7 @@ const TagsManager = () => {
             item={item}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            isEditing={isEditing} // Pass editing state to TagItem
+            isEditing={!!editTagId}
           />
         )}
       />
