@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete }) => {
     const swipeableRef = useRef(null); // Create a ref for the Swipeable component
@@ -47,6 +48,12 @@ const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete }) => {
             overshootRight={false}
         >
             <View style={styles.itemContainer}>
+                <Ionicons
+                    name={item.icon || 'pricetag'}
+                    size={24}
+                    color="#555"
+                    style={styles.iconBox}
+                />
                 <Text style={styles.itemText} numberOfLines={1}>
                     {item.tagName}
                 </Text>
@@ -58,16 +65,23 @@ const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete }) => {
 
 const styles = StyleSheet.create({
     itemContainer: {
-        flex: 1,
+        flexDirection: 'row', // Align items in a row
+        alignItems: 'center', // Center items vertically
         backgroundColor: '#fff',
         padding: 15,
         borderBottomWidth: 1,
         borderColor: '#ddd',
-        justifyContent: 'center',
     },
     itemText: {
         fontSize: 16,
         color: '#000',
+        marginLeft: 10, // Add spacing between the icon and text
+        flex: 1, // Allow text to take up remaining space
+    },
+    iconBox: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 10, // Add some spacing to the right of the icon
     },
     actionsContainer: {
         flexDirection: 'row',
@@ -90,5 +104,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
+
 
 export default TagItem;
