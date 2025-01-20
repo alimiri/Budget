@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import TagManager from './TagManager';
+import IconAdmin from './IconAdmin';
 import Help from './Help';
 import Settings from './Settings';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -13,8 +14,8 @@ const Tab = createBottomTabNavigator();
 
 const TabBarIcon = ({ route, focused, size }) => {
   const icons = {
-    home: 'castle',
-    shop: 'store',
+    tags: 'castle',
+    icons: 'store',
     trophy: 'trophy',
     help: 'book-open-outline',
     settings: 'cog',
@@ -76,6 +77,7 @@ const App = () => {
             </GestureHandlerRootView>
           )}
         />
+        <Tab.Screen name="Icons" component={IconAdmin} />
         <Tab.Screen name="Help" component={Help} />
         <Tab.Screen name="Settings">
           {() => (

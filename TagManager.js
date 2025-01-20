@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import TagItem from './TagItem';
 import { View, Text, TextInput, TouchableOpacity, Modal, FlatList, StyleSheet, Dimensions, Alert } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import * as SQLite from 'expo-sqlite';
-import iconList from './assets/Ionicons.json';
-import LinearGradient from 'react-native-linear-gradient';
+import Database from './Database';
+import IconDisplay from './IconDisplay';
 
-const db = SQLite.openDatabaseSync('tags.db');
-const fullIconList = Object.keys(iconList);
+let fullIconList = [];
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const ICON_ITEM_SIZE = 50; // Icon size + padding
@@ -19,7 +15,8 @@ const TagsManager = () => {
   const popupWidth = screenWidth * 0.9; // 80% of screen width
   const numColumns = Math.floor(popupWidth / ICON_ITEM_SIZE); // Calculate columns dynamically
 
-
+  const db = useRef(null);
+  const icon_db = useRef(null);
 
   const loadMoreIcons = () => {
     const nextPage = page + 1;
@@ -34,17 +31,12 @@ const TagsManager = () => {
   const [icon, setIcon] = useState(null); // Store selected icon
   const pageSize = 10;
 
-  const selectQuery = useRef(null);
-  const insertQuery = useRef(null);
-  const updateQuery = useRef(null);
-  const deleteQuery = useRef(null);
-
   const [iconPickerVisible, setIconPickerVisible] = useState(false);
 
   //is called when we select an icon from popup
-  const selectIcon = (iconName) => {
+  const selectIcon = (icon) => {
     setIconPickerVisible(false);
-    setIcon(iconName);
+    setIcon(icon);
   };
 
   useEffect(() => {
@@ -53,51 +45,39 @@ const TagsManager = () => {
     }
   }, [searchQuery]);
 
-  const initializeDatabase = async () => {
-    db.execSync(
-      'CREATE TABLE IF NOT EXISTS tags (id INTEGER PRIMARY KEY AUTOINCREMENT, tagName TEXT UNIQUE, icon TEXT);'
-    );
-    const columns = db.getAllSync(`PRAGMA table_info(tags);`).map(_ => _.name);
-    if (!columns.includes('icon')) {
-      db.execSync(`ALTER TABLE tags ADD COLUMN icon TEXT;`);
-    }
-
-    selectQuery.current = await db.prepareAsync(`SELECT * FROM tags WHERE tagName LIKE ? ORDER BY tagName ASC LIMIT ?`);
-    insertQuery.current = await db.prepareAsync(`INSERT INTO tags (tagName, icon) VALUES (?, ?)`);
-    updateQuery.current = await db.prepareAsync(`UPDATE tags SET tagName = ?, icon = ? WHERE id = ?`);
-    deleteQuery.current = await db.prepareAsync(`DELETE FROM tags WHERE id = ?`);
-
-    fetchTags();
-  };
-
   useEffect(() => {
-    initializeDatabase();
+    db.current = Database.initializeDatabase('tags.db');
+    fetchTags();
 
-    // Cleanup function
+    icon_db.current = Database.initializeDatabase('icons.db');
+    const result = icon_db.current.select.executeSync();
+    fullIconList = result.getAllSync();
+    setIcons(fullIconList.slice(0, 20));
     return () => {
-      selectQuery.current?.finalizeAsync();
-      insertQuery.current?.finalizeAsync();
-      updateQuery.current?.finalizeAsync();
-      deleteQuery.current?.finalizeAsync();
+      Database.cleanupDatabase('tags.db');
+      Database.cleanupDatabase('icons.db');
     };
   }, []);
 
-  const fetchTags = async () => {
-    const result = await selectQuery.current.executeAsync([`%${searchQuery}%`, pageSize]);
-    const rows = await result.getAllAsync();
-    setTags(rows);
+  const fetchTags = () => {
+    if (db.current) {
+      const result = db.current.select.executeSync(`%${searchQuery}%`, pageSize);
+      const rows = result.getAllSync();
+      setTags(rows);
+    }
   };
 
-  const addTag = async () => {
+  const addTag = () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
     if (tags.some((tag) => tag.tagName === searchQuery)) return;
-    await insertQuery.current.executeAsync([searchQuery, icon]);
+    db.current.insert.executeSync(searchQuery, icon.library + '/' + icon.icon);
     setSearchQuery('');
+    setIcon(null);
   };
 
-  const updateTag = async () => {
+  const updateTag = () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
-    await updateQuery.current.executeAsync([searchQuery, icon, editTagId]);
+    db.current.update.executeSync([searchQuery, icon.library + '/' + icon.icon, editTagId]);
     cancelEdit();
   };
 
@@ -116,7 +96,7 @@ const TagsManager = () => {
         {
           text: 'Delete',
           onPress: async () => {
-            await deleteQuery.current.executeAsync([id]); // Delete tag
+            await db.current.del.executeSync(id); // Delete tag
             fetchTags(); // Refresh tags list
           },
           style: 'destructive',
@@ -126,12 +106,11 @@ const TagsManager = () => {
     );
   };
 
-
   const handleEdit = (id) => {
     const tag = tags.find((tag) => tag.id === id);
     setEditTagId(tag.id);
     setSearchQuery(tag.tagName);
-    setIcon(tag.icon || null);
+    setIcon({ library: tag.icon.split('/')[0], icon: tag.icon.split('/')[1] } || null);
   };
 
   const cancelEdit = () => {
@@ -154,28 +133,17 @@ const TagsManager = () => {
           onPress={() => setIconPickerVisible(true)}
           style={styles.iconContainer}
         >
-          {icon ? <Ionicons name={icon} size={24} color="#555" /> : <EvilIcons name={'navicon'} size={24} color="#555" />}
+          <IconDisplay library={icon ? icon.library : 'EvilIcons'} icon={icon ? icon.icon : 'navicon'} size={24} color="#555" />
         </TouchableOpacity>
         {editTagId ? (
           <View style={styles.iconRow}>
-            <Ionicons
-              name="checkmark"
-              size={24}
-              color="green"
-              onPress={updateTag}
-              style={styles.icon}
-            />
-            <Ionicons
-              name="close"
-              size={24}
-              color="red"
-              onPress={cancelEdit}
-              style={styles.icon}
-            />
+            <IconDisplay library='Ionicons' icon='checkmark' size={24} color="green" onPress={updateTag} style={styles.icon} />
+            <IconDisplay library='Ionicons' icon='close' size={24} color="red" onPress={cancelEdit} style={styles.icon} />
           </View>
         ) : (
-          <Ionicons
-            name="add-circle"
+          <IconDisplay
+            library='Ionicons'
+            icon="add-circle"
             size={30}
             color={!searchQuery || tags.some((tag) => tag.tagName === searchQuery) ? 'gray' : 'blue'}
             onPress={addTag}
@@ -221,7 +189,7 @@ const TagsManager = () => {
                   }}
                   style={styles.iconPickerItem}
                 >
-                  <Ionicons name={item} size={32} color="#555" />
+                  <IconDisplay library={item.library} icon={item.icon} size={32} color="#555" />
                 </TouchableOpacity>
               )}
             />
@@ -235,7 +203,7 @@ const TagsManager = () => {
                 onPress={() => setIconPickerVisible(false)}
                 style={styles.closeButton}
               >
-                <Ionicons name="close" size={24} color="#fff" />
+                <IconDisplay library='Ionicons' icon='close' size={24} color="#fff" />
               </TouchableOpacity>
             </View>
           </View>
@@ -297,7 +265,6 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     marginBottom: 20,
   },
-  //inputRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   iconContainer: {
     padding: 5,
     borderRadius: 8,

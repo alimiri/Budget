@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import IconDisplay from './IconDisplay';
 
 const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete }) => {
     const swipeableRef = useRef(null); // Create a ref for the Swipeable component
@@ -48,12 +48,7 @@ const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete }) => {
             overshootRight={false}
         >
             <View style={styles.itemContainer}>
-                <Ionicons
-                    name={item.icon || 'pricetag'}
-                    size={24}
-                    color="#555"
-                    style={styles.iconBox}
-                />
+                <IconDisplay library={item.icon ? item.icon.split('/')[0] : 'Ionicons'} icon={item.icon ? item.icon.split('/')[1] : 'pricetag'} size={24} color="#555" style={styles.iconBox} />
                 <Text style={styles.itemText} numberOfLines={1}>
                     {item.tagName}
                 </Text>
@@ -61,7 +56,6 @@ const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete }) => {
         </Swipeable>
     );
 };
-
 
 const styles = StyleSheet.create({
     itemContainer: {
