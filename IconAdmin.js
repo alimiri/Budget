@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, FlatList, StyleSheet, Text, TouchableOpacity, Button, Dimensions, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import * as FileSystem from 'expo-file-system';
+import * as DocumentPicker from 'expo-document-picker'; // Import the DocumentPicker
 import Papa from 'papaparse'; // CSV parsing library
 import Database from './Database';
 import IconDisplay from './IconDisplay';
 import { libraries, iconData } from './IconConfig';
 import * as Sharing from 'expo-sharing';
-import * as DocumentPicker from 'expo-document-picker';
 
 const { width: screenWidth } = Dimensions.get('window');
 const ICON_ITEM_SIZE = 50; // Icon size + padding
@@ -54,27 +54,35 @@ const IconAdmin = () => {
   };
 
   const importFromCSV = async () => {
-    const path = FileSystem.documentDirectory + 'iconList.csv';
-
     try {
-      const csvString = await FileSystem.readAsStringAsync(path, { EncodingType: 'utf8' });
-      const parsedData = Papa.parse(csvString, { header: true });
-      if (parsedData.data.length > 0) {
-        const newSelectedIcons = parsedData.data.map((item) => ({
-          library: item.library,
-          icon: item.icon,
-        }));
-        setSelectedIcons(newSelectedIcons);
+      // Open the file picker dialog
+      const result = await DocumentPicker.getDocumentAsync({ type: 'application/csv' });
 
-        // Update database
-        db.current.delAll.executeSync(); // Clear existing data
-        newSelectedIcons.forEach((icon) =>
-          db.current.insert.executeSync(icon.library, icon.icon)
-        );
+      // Check if a file was selected
+      if (result.type === 'success') {
+        const fileUri = result.uri;
 
-        Alert.alert('Import Successful', 'Selected icons updated.');
-      } else {
-        Alert.alert('Import Failed', 'No data found in the CSV file.');
+        // Read the selected CSV file
+        const csvString = await FileSystem.readAsStringAsync(fileUri, { encoding: FileSystem.EncodingType.UTF8 });
+
+        const parsedData = Papa.parse(csvString, { header: true });
+        if (parsedData.data.length > 0) {
+          const newSelectedIcons = parsedData.data.map((item) => ({
+            library: item.library,
+            icon: item.icon,
+          }));
+          setSelectedIcons(newSelectedIcons);
+
+          // Update database
+          db.current.delAll.executeSync(); // Clear existing data
+          newSelectedIcons.forEach((icon) =>
+            db.current.insert.executeSync(icon.library, icon.icon)
+          );
+
+          Alert.alert('Import Successful', 'Selected icons updated.');
+        } else {
+          Alert.alert('Import Failed', 'No data found in the CSV file.');
+        }
       }
     } catch (error) {
       console.error('Error importing CSV:', error);
