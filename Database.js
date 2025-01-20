@@ -49,6 +49,9 @@ const Database = {
                     db.del = db.db.prepareSync(
                         'DELETE FROM icons WHERE library = ? AND icon = ?'
                     );
+                    db.delAll = db.db.prepareSync(
+                        'DELETE FROM icons'
+                    );
                 }
             }
         }
@@ -69,6 +72,9 @@ const Database = {
             }
             if (db.del) {
                 db.del.finalizeSync();
+            }
+            if (db.delAll) {
+                db.delAll.finalizeSync();
             }
             db.db.closeSync();
             dbInstances[dbName] = null;

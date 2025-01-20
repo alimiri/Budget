@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, FlatList, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, FlatList, StyleSheet, Text, TouchableOpacity, Button, Dimensions, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import * as FileSystem from 'expo-file-system';
+import Papa from 'papaparse'; // CSV parsing library
 import Database from './Database';
 import IconDisplay from './IconDisplay';
 import { libraries, iconData } from './IconConfig';
+import * as Sharing from 'expo-sharing';
+import * as DocumentPicker from 'expo-document-picker';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window');
 const ICON_ITEM_SIZE = 50; // Icon size + padding
 const numColumns = Math.floor(screenWidth / ICON_ITEM_SIZE);
 
 const IconAdmin = () => {
   const db = useRef(null);
-
   const [selectedLibrary, setSelectedLibrary] = useState('FontAwesome');
-
   const [selectedIcons, setSelectedIcons] = useState([]);
 
+  // Initialize database and load selected icons
   useEffect(() => {
     db.current = Database.initializeDatabase('icons.db');
     const result = db.current.select.executeSync();
@@ -39,31 +42,67 @@ const IconAdmin = () => {
     db.current.del.executeSync(library, icon);
   };
 
+  const exportToCSV = async () => {
+    const csvData = selectedIcons.map((icon) => ({
+      library: icon.library,
+      icon: icon.icon,
+    }));
+    const csvString = Papa.unparse(csvData);
+    const path = FileSystem.documentDirectory + 'iconList.csv';
+    await FileSystem.writeAsStringAsync(path, csvString, { EncodingType: 'utf8' });
+    Sharing.shareAsync(path, {});
+  };
+
+  const importFromCSV = async () => {
+    const path = FileSystem.documentDirectory + 'iconList.csv';
+
+    try {
+      const csvString = await FileSystem.readAsStringAsync(path, { EncodingType: 'utf8' });
+      const parsedData = Papa.parse(csvString, { header: true });
+      if (parsedData.data.length > 0) {
+        const newSelectedIcons = parsedData.data.map((item) => ({
+          library: item.library,
+          icon: item.icon,
+        }));
+        setSelectedIcons(newSelectedIcons);
+
+        // Update database
+        db.current.delAll.executeSync(); // Clear existing data
+        newSelectedIcons.forEach((icon) =>
+          db.current.insert.executeSync(icon.library, icon.icon)
+        );
+
+        Alert.alert('Import Successful', 'Selected icons updated.');
+      } else {
+        Alert.alert('Import Failed', 'No data found in the CSV file.');
+      }
+    } catch (error) {
+      console.error('Error importing CSV:', error);
+      Alert.alert('Import Failed', 'Unable to read the CSV file.');
+    }
+  };
+
   const filteredIcons = iconData[selectedLibrary].filter(
     (icon) => !selectedIcons.find((item) => item.library === selectedLibrary && item.icon === icon)
   );
 
-  const renderSelectedIcon = ({ item }) => {
-    return (
-      <TouchableOpacity
-        style={styles.iconWrapper}
-        onPress={() => handleIconRemove(item.library, item.icon)}
-      >
-        <IconDisplay library={item.library} icon={item.icon} size={40} color="green" />
-      </TouchableOpacity>
-    );
-  };
+  const renderSelectedIcon = ({ item }) => (
+    <TouchableOpacity
+      style={styles.iconWrapper}
+      onPress={() => handleIconRemove(item.library, item.icon)}
+    >
+      <IconDisplay library={item.library} icon={item.icon} size={40} color="green" />
+    </TouchableOpacity>
+  );
 
-  const renderAvailableIcon = ({ item }) => {
-    return (
-      <TouchableOpacity
-        style={styles.iconWrapper}
-        onPress={() => handleIconSelect(selectedLibrary, item)}
-      >
-        <IconDisplay library={selectedLibrary} icon={item} size={40} color="blue" />
-      </TouchableOpacity>
-    );
-  };
+  const renderAvailableIcon = ({ item }) => (
+    <TouchableOpacity
+      style={styles.iconWrapper}
+      onPress={() => handleIconSelect(selectedLibrary, item)}
+    >
+      <IconDisplay library={selectedLibrary} icon={item} size={40} color="blue" />
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -93,6 +132,12 @@ const IconAdmin = () => {
         style={styles.list}
         numColumns={numColumns}
       />
+
+      {/* Export and Import Buttons */}
+      <View style={styles.buttonContainer}>
+        <Button title="Export to CSV" onPress={exportToCSV} />
+        <Button title="Import from CSV" onPress={importFromCSV} />
+      </View>
     </View>
   );
 };
@@ -119,6 +164,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 20,
   },
 });
 
