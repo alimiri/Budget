@@ -1,23 +1,68 @@
-// IconConfig.js
-import * as FontAwesome from 'react-native-vector-icons/FontAwesome';
-import * as MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import * as Ionicons from 'react-native-vector-icons/Ionicons';
-import * as EvilIcons from 'react-native-vector-icons/EvilIcons';
+const libraryNames = [
+  'Entypo',
+  'EvilIcons',
+  'Feather',
+  'FontAwesome',
+  'FontAwesome5',
+  'FontAwesome5Brands',
+  'FontAwesome6',
+  'FontAwesome6Brands',
+  'Fontisto',
+  'Foundation',
+  'Ionicons',
+  'MaterialCommunityIcons',
+  'MaterialIcons',
+  'Octicons',
+  'SimpleLineIcons',
+  'Zocial',
+];
 
-import IoniconsList from './assets/Ionicons.json';
+// Base GitHub URL for JSON files
+const githubBaseUrl = 'https://raw.githubusercontent.com/oblador/react-native-vector-icons/master/glyphmaps';
 
-// Icon libraries
-export const libraries = {
-  FontAwesome,
-  MaterialIcons,
-  Ionicons,
-  EvilIcons,
+// Dynamically construct URLs for JSON files
+const iconJSONUrls = {};
+libraryNames.forEach((name) => {
+  iconJSONUrls[name] = `${githubBaseUrl}/${name}.json`;
+});
+
+// Dynamically import libraries
+export const libraries = {};
+libraryNames.forEach((name) => {
+  try {
+    libraries[name] = require(`react-native-vector-icons/${name}`);
+  } catch (error) {
+    console.warn(`Failed to load library: ${name}`, error);
+  }
+});
+
+// Function to fetch JSON data
+const fetchIconJSON = async (url) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch JSON from ${url}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching icon JSON:', error);
+    return null;
+  }
 };
 
-// Available icons in each library
-export const iconData = {
-  FontAwesome: ['star', 'heart', 'car', 'camera'],
-  MaterialIcons: ['home', 'account-circle', 'alarm', 'pets'],
-  Ionicons: Object.keys(IoniconsList),
-  EvilIcons: ['archive', 'bell', 'camera', 'credit-card'],
+// Populate `iconData` dynamically
+export const iconData = {};
+
+export const initializeIconData = async () => {
+  for (const [library, url] of Object.entries(iconJSONUrls)) {
+    const jsonData = await fetchIconJSON(url);
+    if (jsonData) {
+      iconData[library] = Object.keys(jsonData);
+    } else {
+      console.warn(`Could not fetch data for ${library}.`);
+    }
+  }
 };
+
+// Call the initialization function
+initializeIconData();
