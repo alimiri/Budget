@@ -1,40 +1,40 @@
 const libraryNames = [
-  'Entypo',
-  'EvilIcons',
-  'Feather',
-  'FontAwesome',
-  'FontAwesome5',
-  'FontAwesome5Brands',
-  'FontAwesome6',
-  'FontAwesome6Brands',
-  'Fontisto',
-  'Foundation',
-  'Ionicons',
-  'MaterialCommunityIcons',
-  'MaterialIcons',
-  'Octicons',
-  'SimpleLineIcons',
-  'Zocial',
+  {name:'Entypo', folder: 'entypo', file: 'Entypo.json'},
+  {name: 'EvilIcons', folder: 'evil-icons', file: 'EvilIcons.json'},
+  {name: 'Feather', folder: 'feather', file: 'Feather.json'},
+  {name: 'FontAwesome', folder: 'fontawesome', file: 'FontAwesome.json'},
+  {name: 'FontAwesome5', folder: 'fontawesome5', file: 'FontAwesome5.json'},
+  {name: 'FontAwesome6', folder: 'fontawesome6', file: 'FontAwesome6.json'},
+  {name: 'Fontisto', folder: 'fontisto', file: 'Fontisto.json'},
+  {name: 'Foundation', folder: 'foundation', file: 'Foundation.json'},
+  {name: 'Ionicons', folder: 'ionicons', file: 'Ionicons.json'},
+  {name: 'MaterialIcons', folder: 'material-icons', file: 'MaterialIcons.json'},
+  {name: 'Octicons', folder: 'octicons', file: 'Octicons.json'},
+  {name: 'SimpleLineIcons', folder: 'simple-line-icons', file: 'SimpleLineIcons.json'},
+  {name: 'Zocial', folder: 'zocial', file: 'Zocial.json'},
 ];
-
-// Base GitHub URL for JSON files
-const githubBaseUrl = 'https://raw.githubusercontent.com/oblador/react-native-vector-icons/master/glyphmaps';
 
 // Dynamically construct URLs for JSON files
 const iconJSONUrls = {};
-libraryNames.forEach((name) => {
-  iconJSONUrls[name] = `${githubBaseUrl}/${name}.json`;
+libraryNames.forEach((lib) => {
+  iconJSONUrls[lib.name] = `https://raw.githubusercontent.com/oblador/react-native-vector-icons/refs/heads/master/packages/${lib.folder}/glyphmaps/${lib.file}`;
 });
 
-// Dynamically import libraries
-export const libraries = {};
-libraryNames.forEach((name) => {
-  try {
-    libraries[name] = require(`react-native-vector-icons/${name}`);
-  } catch (error) {
-    console.warn(`Failed to load library: ${name}`, error);
-  }
-});
+export const libraries = {
+  Entypo: require('react-native-vector-icons/Entypo'),
+  EvilIcons: require('react-native-vector-icons/EvilIcons'),
+  Feather: require('react-native-vector-icons/Feather'),
+  FontAwesome: require('react-native-vector-icons/FontAwesome'),
+  FontAwesome5: require('react-native-vector-icons/FontAwesome5'),
+  FontAwesome6: require('react-native-vector-icons/FontAwesome6'),
+  Fontisto: require('react-native-vector-icons/Fontisto'),
+  Foundation: require('react-native-vector-icons/Foundation'),
+  Ionicons: require('react-native-vector-icons/Ionicons'),
+  MaterialIcons: require('react-native-vector-icons/MaterialIcons'),
+  Octicons: require('react-native-vector-icons/Octicons'),
+  SimpleLineIcons: require('react-native-vector-icons/SimpleLineIcons'),
+  Zocial: require('react-native-vector-icons/Zocial'),
+};
 
 // Function to fetch JSON data
 const fetchIconJSON = async (url) => {

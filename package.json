@@ -11,6 +11,12 @@
   "dependencies": {
     "@react-native-community/slider": "^4.5.5",
     "@react-native-picker/picker": "^2.9.0",
+    "@react-native-vector-icons/entypo": "^1.0.1",
+    "@react-native-vector-icons/evil-icons": "^1.10.1",
+    "@react-native-vector-icons/feather": "^4.29.2",
+    "@react-native-vector-icons/fontawesome": "^4.7.0",
+    "@react-native-vector-icons/fontawesome5": "^5.15.4",
+    "@react-native-vector-icons/fontawesome6": "^6.7.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "expo": "^52.0.26",
     "expo-document-picker": "~13.0.2",
