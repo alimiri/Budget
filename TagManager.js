@@ -3,6 +3,7 @@ import TagItem from './TagItem';
 import { View, Text, TextInput, TouchableOpacity, Modal, FlatList, StyleSheet, Dimensions, Alert } from 'react-native';
 import Database from './Database';
 import IconDisplay from './IconDisplay';
+import { importLocalCSV } from './IconAdmin';
 
 let fullIconList = [];
 
@@ -16,7 +17,6 @@ const TagsManager = () => {
   const numColumns = Math.floor(popupWidth / ICON_ITEM_SIZE); // Calculate columns dynamically
 
   const db = useRef(null);
-  const icon_db = useRef(null);
 
   const loadMoreIcons = () => {
     const nextPage = page + 1;
@@ -46,17 +46,16 @@ const TagsManager = () => {
   }, [searchQuery]);
 
   useEffect(() => {
-    db.current = Database.initializeDatabase('tags.db');
-    fetchTags();
-
-    icon_db.current = Database.initializeDatabase('icons.db');
-    const result = icon_db.current.select.executeSync();
-    fullIconList = result.getAllSync();
-    setIcons(fullIconList.slice(0, 20));
-    return () => {
-      Database.cleanupDatabase('tags.db');
-      Database.cleanupDatabase('icons.db');
-    };
+    async function func() {
+      db.current = Database.initializeDatabase('tags.db');
+      fetchTags();
+      fullIconList = await importLocalCSV();
+      setIcons(fullIconList.slice(0, 20));
+      return () => {
+        Database.cleanupDatabase('tags.db');
+      };
+    }
+    func();
   }, []);
 
   const fetchTags = () => {

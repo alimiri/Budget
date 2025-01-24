@@ -14,7 +14,6 @@ const libraryNames = [
   {name: 'Zocial', folder: 'zocial', file: 'Zocial.json'},
 ];
 
-// Dynamically construct URLs for JSON files
 const iconJSONUrls = {};
 libraryNames.forEach((lib) => {
   iconJSONUrls[lib.name] = `https://raw.githubusercontent.com/oblador/react-native-vector-icons/refs/heads/master/packages/${lib.folder}/glyphmaps/${lib.file}`;

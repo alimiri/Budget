@@ -8,10 +8,28 @@ import Database from './Database';
 import IconDisplay from './IconDisplay';
 import { libraries, iconData } from './IconConfig';
 import * as Sharing from 'expo-sharing';
+import { Asset } from "expo-asset";
 
 const { width: screenWidth } = Dimensions.get('window');
 const ICON_ITEM_SIZE = 50; // Icon size + padding
 const numColumns = Math.floor(screenWidth / ICON_ITEM_SIZE);
+
+const importLocalCSV = async () => {
+  let asset;
+  try {
+    asset = Asset.fromModule(require('./assets/iconList.csv')); // Update with your CSV file path
+  } catch (error) {
+    console.error('Error loading asset:', error);
+  }
+  await asset.downloadAsync(); // Ensure the asset is downloaded
+  const fileUri = asset.localUri || asset.uri;
+  const csvString = await FileSystem.readAsStringAsync(fileUri, { encoding: FileSystem.EncodingType.UTF8 });
+  const parsedData = Papa.parse(csvString, { header: true });
+  return parsedData.data.map((item) => ({
+    library: item.library,
+    icon: item.icon,
+  }));
+};
 
 const IconAdmin = () => {
   const db = useRef(null);
@@ -181,3 +199,4 @@ const styles = StyleSheet.create({
 });
 
 export default IconAdmin;
+export { importLocalCSV };
