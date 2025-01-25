@@ -32,24 +32,17 @@ const importLocalCSV = async () => {
 };
 
 const IconAdmin = () => {
-  const db = useRef(null);
   const [selectedLibrary, setSelectedLibrary] = useState('FontAwesome');
   const [selectedIcons, setSelectedIcons] = useState([]);
 
-  // Initialize database and load selected icons
   useEffect(() => {
-    db.current = Database.initializeDatabase('icons.db');
-    const result = db.current.select.executeSync();
-    setSelectedIcons(result.getAllSync());
-    return () => {
-      Database.cleanupDatabase('icons.db');
-    };
+    setSelectedIcons(Database.selectIcons());
   }, []);
 
   const handleIconSelect = (library, icon) => {
     const newSelectedIcons = [...selectedIcons, { library, icon }];
     setSelectedIcons(newSelectedIcons);
-    db.current.insert.executeSync(library, icon);
+    Database.insertIcon(library, icon);
   };
 
   const handleIconRemove = (library, icon) => {
@@ -57,7 +50,7 @@ const IconAdmin = () => {
       (item) => !(item.library === library && item.icon === icon)
     );
     setSelectedIcons(newSelectedIcons);
-    db.current.del.executeSync(library, icon);
+    Database.delIcon(library, icon);
   };
 
   const exportToCSV = async () => {
@@ -92,9 +85,9 @@ const IconAdmin = () => {
           setSelectedIcons(newSelectedIcons);
 
           // Update database
-          db.current.delAll.executeSync(); // Clear existing data
+          Database.delAllIcon(); // Clear existing data
           newSelectedIcons.forEach((icon) =>
-            db.current.insert.executeSync(icon.library, icon.icon)
+            Database.insertIcon(icon.library, icon.icon)
           );
 
           Alert.alert('Import Successful', 'Selected icons updated.');

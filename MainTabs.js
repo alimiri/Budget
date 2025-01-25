@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -8,6 +8,8 @@ import TagManager from './TagManager';
 import IconAdmin from './IconAdmin';
 import Help from './Help';
 import Settings from './Settings';
+import TransactionList from './TransactionList';
+import Database from './Database';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,7 +17,7 @@ const TabBarIcon = ({ route, focused, size }) => {
   const icons = {
     tags: 'castle',
     icons: 'store',
-    trophy: 'trophy',
+    transactions: 'trophy',
     help: 'book-open-outline',
     settings: 'cog',
   };
@@ -37,38 +39,63 @@ const TabBarIcon = ({ route, focused, size }) => {
   );
 };
 
-const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) => (
-  <Tab.Navigator
-    screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, size }) => (
-        <TabBarIcon route={route.name} focused={focused} size={size} />
-      ),
-      tabBarStyle: styles.tabBar,
-      tabBarShowLabel: false,
-    })}
-  >
-    <Tab.Screen
-      name="Tags"
-      children={() => (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <TagManager columns={columns} autoPopup={autoPopup} />
-        </GestureHandlerRootView>
-      )}
-    />
-    <Tab.Screen name="Icons" component={IconAdmin} />
-    <Tab.Screen name="Help" component={Help} />
-    <Tab.Screen name="Settings">
-      {() => (
-        <Settings
-          onColumnsChange={onColumnsChange}
-          onAutoPopupChange={onAutoPopupChange}
-          columns={columns}
-          autoPopup={autoPopup}
-        />
-      )}
-    </Tab.Screen>
-  </Tab.Navigator>
-);
+const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) => {
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    setTags(Database.selectTags('', 1000));
+  }, []);
+
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, size }) => (
+          <TabBarIcon route={route.name} focused={focused} size={size} />
+        ),
+        tabBarStyle: styles.tabBar,
+        tabBarShowLabel: false,
+      })}
+    >
+      {/* Pass props via `children` */}
+      <Tab.Screen
+        name="Transactions"
+        children={() => <TransactionList tags={tags} />}
+      />
+
+      {/* Pass props via `children` */}
+      <Tab.Screen
+        name="Tags"
+        children={() => (
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <TagManager columns={columns} autoPopup={autoPopup} />
+          </GestureHandlerRootView>
+        )}
+      />
+
+      {/* No additional props needed */}
+      <Tab.Screen name="Icons" component={IconAdmin} />
+
+      {/* Pass props via `children` */}
+      <Tab.Screen
+        name="Help"
+        children={() => <Help />}
+      />
+
+      {/* Pass props via `children` */}
+      <Tab.Screen
+        name="Settings"
+        children={() => (
+          <Settings
+            onColumnsChange={onColumnsChange}
+            onAutoPopupChange={onAutoPopupChange}
+            columns={columns}
+            autoPopup={autoPopup}
+          />
+        )}
+      />
+    </Tab.Navigator>
+  )
+};
 
 export default MainTabs;
 

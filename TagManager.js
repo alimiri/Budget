@@ -16,8 +16,6 @@ const TagsManager = () => {
   const popupWidth = screenWidth * 0.9; // 80% of screen width
   const numColumns = Math.floor(popupWidth / ICON_ITEM_SIZE); // Calculate columns dynamically
 
-  const db = useRef(null);
-
   const loadMoreIcons = () => {
     const nextPage = page + 1;
     const nextIcons = fullIconList.slice(0, nextPage * 20); // Add 20 more icons
@@ -47,36 +45,31 @@ const TagsManager = () => {
 
   useEffect(() => {
     async function func() {
-      db.current = Database.initializeDatabase('tags.db');
       fetchTags();
       fullIconList = await importLocalCSV();
       setIcons(fullIconList.slice(0, 20));
       return () => {
-        Database.cleanupDatabase('tags.db');
+        Database.cleanupStatements('tags.db');
       };
     }
     func();
   }, []);
 
   const fetchTags = () => {
-    if (db.current) {
-      const result = db.current.select.executeSync(`%${searchQuery}%`, pageSize);
-      const rows = result.getAllSync();
-      setTags(rows);
-    }
+    setTags(Database.selectTags(searchQuery, pageSize));
   };
 
   const addTag = () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
     if (tags.some((tag) => tag.tagName === searchQuery)) return;
-    db.current.insert.executeSync(searchQuery, icon.library + '/' + icon.icon);
+    Database.insertTag(searchQuery, icon.library + '/' + icon.icon);
     setSearchQuery('');
     setIcon(null);
   };
 
   const updateTag = () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
-    db.current.update.executeSync([searchQuery, icon.library + '/' + icon.icon, editTagId]);
+    Database.updateTag([searchQuery, icon.library + '/' + icon.icon, editTagId]);
     cancelEdit();
   };
 
@@ -95,8 +88,8 @@ const TagsManager = () => {
         {
           text: 'Delete',
           onPress: async () => {
-            await db.current.del.executeSync(id); // Delete tag
-            fetchTags(); // Refresh tags list
+            await Database.delTag(id);
+            fetchTags();
           },
           style: 'destructive',
         },
