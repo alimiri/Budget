@@ -48,9 +48,6 @@ const TagsManager = () => {
       fetchTags();
       fullIconList = await importLocalCSV();
       setIcons(fullIconList.slice(0, 20));
-      return () => {
-        Database.cleanupStatements('tags.db');
-      };
     }
     func();
   }, []);
@@ -62,14 +59,14 @@ const TagsManager = () => {
   const addTag = () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
     if (tags.some((tag) => tag.tagName === searchQuery)) return;
-    Database.insertTag(searchQuery, icon.library + '/' + icon.icon);
+    Database.insertTag(searchQuery, icon ? icon.library + '/' + icon.icon : null);
     setSearchQuery('');
     setIcon(null);
   };
 
   const updateTag = () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
-    Database.updateTag([searchQuery, icon.library + '/' + icon.icon, editTagId]);
+    Database.updateTag(searchQuery, icon ? icon.library + '/' + icon.icon : null, editTagId);
     cancelEdit();
   };
 
@@ -102,7 +99,7 @@ const TagsManager = () => {
     const tag = tags.find((tag) => tag.id === id);
     setEditTagId(tag.id);
     setSearchQuery(tag.tagName);
-    setIcon({ library: tag.icon.split('/')[0], icon: tag.icon.split('/')[1] } || null);
+    setIcon(tag.icon ? { library: tag.icon.split('/')[0], icon: tag.icon.split('/')[1] } : null);
   };
 
   const cancelEdit = () => {

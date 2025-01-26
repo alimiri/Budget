@@ -24,14 +24,13 @@ const TransactionModal = ({
   const [selectedTags, setSelectedTags] = useState([]);
   const [isIncome, setIsIncome] = useState(true);
 
-  // Initialize form when editing a transaction
   useEffect(() => {
     if (transaction) {
-      setDate(new Date(transaction.date));
+      setDate(new Date(transaction.TransactionDate));
       setDescription(transaction.description);
       setAmount(Math.abs(transaction.amount).toString());
       setIsIncome(transaction.amount > 0);
-      setSelectedTags(transaction.tags || []);
+      setSelectedTags(transaction.tags.map(_ => _.id) || []);
     } else {
       // Reset form for adding a new transaction
       setDate(new Date());

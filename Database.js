@@ -24,6 +24,7 @@ const Database = {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('SELECT * FROM tags WHERE tagName LIKE ? ORDER BY tagName ASC LIMIT ?');
         const result = stmt.executeSync(`%${tagName}%`, pageSize).getAllSync();
+
         stmt.finalizeSync();
         db.closeSync();
         return result;
@@ -33,6 +34,7 @@ const Database = {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('INSERT INTO tags (tagName, icon) VALUES (?, ?)');
         stmt.executeSync(tagName, icon);
+
         stmt.finalizeSync();
         db.closeSync();
     },
@@ -41,6 +43,7 @@ const Database = {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('UPDATE tags SET tagName = ?, icon = ? WHERE id = ?');
         stmt.executeSync(tagName, icon, id);
+
         stmt.finalizeSync();
         db.closeSync();
     },
@@ -49,6 +52,7 @@ const Database = {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('DELETE FROM tags WHERE id = ?');
         stmt.executeSync(id);
+
         stmt.finalizeSync();
         db.closeSync();
     },
@@ -57,6 +61,7 @@ const Database = {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('SELECT * FROM icons');
         const result = stmt.executeSync().getAllSync();
+
         stmt.finalizeSync();
         db.closeSync();
         return result;
@@ -66,6 +71,7 @@ const Database = {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('INSERT INTO icons (library, icon) VALUES (?, ?)');
         stmt.executeSync(library, icon);
+
         stmt.finalizeSync();
         db.closeSync();
     },
@@ -74,6 +80,7 @@ const Database = {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('DELETE FROM icons WHERE library = ? AND icon = ?');
         stmt.executeSync(library, icon);
+
         stmt.finalizeSync();
         db.closeSync();
     },
@@ -82,6 +89,7 @@ const Database = {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('DELETE FROM icons');
         stmt.executeSync();
+
         stmt.finalizeSync();
         db.closeSync();
     },
@@ -96,6 +104,7 @@ const Database = {
             const tags = stmt2.executeSync(row.id).getAllSync();
             return { ...row, tags };
         });
+
         stmt.finalizeSync();
         stmt2.finalizeSync();
         db.closeSync();
@@ -106,11 +115,28 @@ const Database = {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('INSERT INTO Transactions (TransactionDate, description, amount) VALUES (?, ?, ?)');
         const result = stmt.executeSync(transactionDate, description, amount);
-
         const stmt2 = db.prepareSync('INSERT INTO TransactionTags (TransactionId, TagId) VALUES (?, ?)');
-        tags.forEach((tagId) => stmt2.executeSync(result.lastInsertRowid, tagId));
+        tags.forEach((tagId) => stmt2.executeSync(result.lastInsertRowId, tagId));
+
         stmt.finalizeSync();
         stmt2.finalizeSync();
+        db.closeSync();
+    },
+
+    updateTransaction: (id, transactionDate, description, amount, tags) => {
+        const db = SQLite.openDatabaseSync(dbName);
+        const stmt = db.prepareSync('UPDATE Transactions SET TransactionDate = ?, description = ?, amount = ? WHERE id = ?');
+        const result = stmt.executeSync(transactionDate, description, amount, id);
+
+        const stmt2 = db.prepareSync('DELETE FROM TransactionTags WHERE TransactionId = ?');
+        stmt2.executeSync(id);
+
+        const stmt3 = db.prepareSync('INSERT INTO TransactionTags (TransactionId, TagId) VALUES (?, ?)');
+        tags.forEach((tagId) => stmt3.executeSync(id, tagId));
+
+        stmt.finalizeSync();
+        stmt2.finalizeSync();
+        stmt3.finalizeSync();
         db.closeSync();
     },
 

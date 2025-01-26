@@ -59,7 +59,11 @@ const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) =>
       {/* Pass props via `children` */}
       <Tab.Screen
         name="Transactions"
-        children={() => <TransactionList tags={tags} />}
+        children={() => (
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <TransactionList tags={tags} />
+          </GestureHandlerRootView>
+        )}
       />
 
       {/* Pass props via `children` */}

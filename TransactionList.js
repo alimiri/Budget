@@ -4,7 +4,7 @@ import TransactionRow from "./TransactionRow";
 import TransactionModal from "./TransactionModal";
 import Database from "./Database";
 
-const TransactionList = ({ tags, onUpdate, onDelete }) => {
+const TransactionList = ({ tags }) => {
   const [filterText, setFilterText] = useState("");
   const [filteredTags, setFilteredTags] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -13,14 +13,20 @@ const TransactionList = ({ tags, onUpdate, onDelete }) => {
 
   useEffect(() => {
     setTransactions(Database.selectTransactions());
-    return () => {
-      Database.cleanupStatements('transactions.db');
-    };
   }, []);
 
   const onAdd = (transaction) => {
-    console.log(transaction);
     Database.insertTransaction(transaction.date, transaction.description, transaction.amount, transaction.tags);
+    setTransactions(Database.selectTransactions());
+  }
+
+  const onUpdate = (id, transaction) => {
+    Database.updateTransaction(id, transaction.date, transaction.description, transaction.amount, transaction.tags);
+    setTransactions(Database.selectTransactions());
+  }
+
+  const onDelete = (id) => {
+    Database.delTransaction(id);
     setTransactions(Database.selectTransactions());
   }
 
