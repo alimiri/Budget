@@ -146,7 +146,7 @@ const IconAdmin = () => {
       </Picker>
       <FlatList
         data={filteredIcons}
-        keyExtractor={(item) => item}
+        keyExtractor={(item, index) => `${item.library}-${item.icon}-${index}`}
         renderItem={renderAvailableIcon}
         style={styles.list}
         numColumns={numColumns}

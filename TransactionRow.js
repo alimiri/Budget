@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import IconDisplay from "./IconDisplay";
 
-const TransactionRow = ({ transaction, onDelete, onEdit, isEditing, onCancelDelete }) => {
+const TransactionRow = ({ transaction, onDelete, onEdit, isEditing, onCancelDelete, readOnly }) => {
   const swipeableRef = useRef(null);
 
   useEffect(() => {
@@ -21,8 +21,9 @@ const TransactionRow = ({ transaction, onDelete, onEdit, isEditing, onCancelDele
     }
   };
 
-  const renderRightActions = () => (
-    <View style={styles.actionsContainer}>
+  const renderRightActions = () => {
+    if (readOnly) return null;
+    return(<View style={styles.actionsContainer}>
       <TouchableOpacity
         onPress={() => onEdit(transaction.id)}
         style={[styles.actionButton, styles.editButton]}
@@ -36,15 +37,17 @@ const TransactionRow = ({ transaction, onDelete, onEdit, isEditing, onCancelDele
         <Text style={styles.actionText}>Delete</Text>
       </TouchableOpacity>
     </View>
-  );
+    )
+  };
 
   return (
     <Swipeable
       ref={swipeableRef}
-      renderRightActions={renderRightActions}
+      renderRightActions={!readOnly ? renderRightActions : undefined}
       overshootFriction={8}
       overshootLeft={false}
       overshootRight={false}
+      enabled={!readOnly}
     >
       <View style={styles.rowContainer}>
         {/* Transaction Details Row */}

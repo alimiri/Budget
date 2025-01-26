@@ -10,7 +10,7 @@ let fullIconList = [];
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const ICON_ITEM_SIZE = 50; // Icon size + padding
 
-const TagsManager = () => {
+const TagsManager = ({onTagChanged}) => {
   const [page, setPage] = useState(1);
   const [icons, setIcons] = useState(fullIconList.slice(0, 20));
   const popupWidth = screenWidth * 0.9; // 80% of screen width
@@ -60,6 +60,7 @@ const TagsManager = () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
     if (tags.some((tag) => tag.tagName === searchQuery)) return;
     Database.insertTag(searchQuery, icon ? icon.library + '/' + icon.icon : null);
+    onTagChanged();
     setSearchQuery('');
     setIcon(null);
   };
@@ -67,6 +68,7 @@ const TagsManager = () => {
   const updateTag = () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
     Database.updateTag(searchQuery, icon ? icon.library + '/' + icon.icon : null, editTagId);
+    onTagChanged();
     cancelEdit();
   };
 
@@ -84,8 +86,9 @@ const TagsManager = () => {
         },
         {
           text: 'Delete',
-          onPress: async () => {
-            await Database.delTag(id);
+          onPress: () => {
+            Database.delTag(id);
+            onTagChanged();
             fetchTags();
           },
           style: 'destructive',

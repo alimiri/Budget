@@ -42,10 +42,17 @@ const TabBarIcon = ({ route, focused, size }) => {
 const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) => {
   const [tags, setTags] = useState([]);
 
-  useEffect(() => {
+  const loadTags = () => {
     setTags(Database.selectTags('', 1000));
+  };
+
+  useEffect(() => {
+    loadTags();
   }, []);
 
+  onTagChanged = () => {
+    loadTags();
+  };
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -61,7 +68,7 @@ const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) =>
         name="Transactions"
         children={() => (
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <TransactionList tags={tags} />
+            <TransactionList tags={tags} readOnly={false}/>
           </GestureHandlerRootView>
         )}
       />
@@ -71,7 +78,7 @@ const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) =>
         name="Tags"
         children={() => (
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <TagManager columns={columns} autoPopup={autoPopup} />
+            <TagManager columns={columns} autoPopup={autoPopup} onTagChanged={onTagChanged}/>
           </GestureHandlerRootView>
         )}
       />
