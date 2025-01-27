@@ -7,6 +7,8 @@ import Database from "./Database";
 const TransactionList = ({ tags, readOnly = false }) => {
   const [filterText, setFilterText] = useState("");
   const [filteredTags, setFilteredTags] = useState([]);
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [transactions, setTransactions] = useState([]);
@@ -31,23 +33,28 @@ const TransactionList = ({ tags, readOnly = false }) => {
   };
 
   const handleFilter = () => {
-    return transactions.filter(transaction => {
+    return transactions.filter((transaction) => {
       const matchesText =
         transaction.description.toLowerCase().includes(filterText.toLowerCase()) ||
         transaction.amount.toString().includes(filterText);
       const matchesTags =
         filteredTags.length === 0 ||
-        filteredTags.every(tagId => transaction.tags.includes(tagId));
-      return matchesText && matchesTags;
+        filteredTags.every((tagId) => transaction.tags.includes(tagId));
+      const matchesFromDate =
+        !fromDate || new Date(transaction.TransactionDate) >= new Date(fromDate);
+      const matchesToDate =
+        !toDate || new Date(transaction.TransactionDate) <= new Date(toDate);
+
+      return matchesText && matchesTags && matchesFromDate && matchesToDate;
     });
   };
 
   // Calculate totals for the ribbon
   const calculateTotals = () => {
-    const incomes = transactions
+    const incomes = handleFilter()
       .filter((transaction) => transaction.amount > 0)
       .reduce((sum, transaction) => sum + transaction.amount, 0);
-    const expenses = transactions
+    const expenses = handleFilter()
       .filter((transaction) => transaction.amount < 0)
       .reduce((sum, transaction) => sum + transaction.amount, 0);
     const total = incomes + expenses;
@@ -58,6 +65,7 @@ const TransactionList = ({ tags, readOnly = false }) => {
 
   return (
     <View style={styles.container}>
+      {/* Filter Bar */}
       <View style={styles.filterBar}>
         <TextInput
           style={styles.filterInput}
@@ -65,48 +73,71 @@ const TransactionList = ({ tags, readOnly = false }) => {
           value={filterText}
           onChangeText={setFilterText}
         />
-        {/* Add tag filter dropdown/multiselect here */}
       </View>
-
+      {/* Date Range Filter */}
+      <View style={styles.dateFilterBar}>
+        <TextInput
+          style={styles.dateInput}
+          placeholder="From Date (YYYY-MM-DD)"
+          value={fromDate}
+          onChangeText={setFromDate}
+        />
+        <TextInput
+          style={styles.dateInput}
+          placeholder="To Date (YYYY-MM-DD)"
+          value={toDate}
+          onChangeText={setToDate}
+        />
+      </View>
+      {/* Transactions List */}
       <FlatList
         data={handleFilter()}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TransactionRow
             transaction={item}
-            onDelete={() => { readOnly ? onDelete(item.id) : undefined }}
-            onEdit={readOnly ? () => {
-              setSelectedTransaction(item);
-              setModalVisible(true);
-            } : undefined}
+            onDelete={() => (readOnly ? onDelete(item.id) : undefined)}
+            onEdit={
+              readOnly
+                ? () => {
+                  setSelectedTransaction(item);
+                  setModalVisible(true);
+                }
+                : undefined
+            }
             readOnly={readOnly}
           />
         )}
-        ListFooterComponent={
-          <View style={styles.ribbon}>
-            <Text style={styles.ribbonText}>
-              Total: <Text style={styles.incomeText}>{incomes.toFixed(2)}</Text>{' '}
-              | <Text style={styles.expenseText}>{expenses.toFixed(2)}</Text>{' '}
-              | <Text style={styles.totalText}>{total.toFixed(2)}</Text>
-            </Text>
-          </View>
-        }
+        contentContainerStyle={{ paddingBottom: 60 }} // Add padding to avoid list content overlapping the ribbon
       />
 
-      {!readOnly && (<TouchableOpacity
-        style={styles.addButton}
-        onPress={() => {
-          setSelectedTransaction(null);
-          setModalVisible(true);
-        }}
-      >
-        <Text style={styles.addButtonText}>+</Text>
-      </TouchableOpacity>)}
+      {/* Bottom Ribbon */}
+      <View style={styles.ribbon}>
+        <Text style={styles.ribbonText}>
+          Total: <Text style={styles.incomeText}>{incomes.toFixed(2)}</Text>{' '}
+          | <Text style={styles.expenseText}>{expenses.toFixed(2)}</Text>{' '}
+          | <Text style={styles.totalText}>{total.toFixed(2)}</Text>
+        </Text>
+      </View>
 
-      < TransactionModal
+      {/* Add Button */}
+      {!readOnly && (
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => {
+            setSelectedTransaction(null);
+            setModalVisible(true);
+          }}
+        >
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* Transaction Modal */}
+      <TransactionModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        onSave={data => {
+        onSave={(data) => {
           if (selectedTransaction) onUpdate(selectedTransaction.id, data);
           else onAdd(data);
           setModalVisible(false);
@@ -119,18 +150,24 @@ const TransactionList = ({ tags, readOnly = false }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
   filterBar: { flexDirection: "row", padding: 10 },
   filterInput: { flex: 1, borderWidth: 1, borderColor: "#ccc", padding: 5, borderRadius: 5 },
   addButton: { position: "absolute", bottom: 80, right: 20, backgroundColor: "#007AFF", padding: 15, borderRadius: 50 },
   addButtonText: { color: "#fff", fontSize: 24 },
   ribbon: {
+    position: "absolute", // Fix it at the bottom
+    bottom: 0,
+    width: "100%",
     backgroundColor: "#f8f9fa",
     paddingVertical: 10,
     borderTopWidth: 1,
     borderColor: "#ccc",
     justifyContent: "center",
     alignItems: "center",
+  },
+  container: {
+    flex: 1,
+    position: "relative", // Ensures the ribbon stays within the parent container
   },
   ribbonText: {
     fontSize: 16,
@@ -147,6 +184,20 @@ const styles = StyleSheet.create({
   totalText: {
     color: "blue",
     fontWeight: "bold"
+  },
+  dateFilterBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  dateInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 5,
+    borderRadius: 5,
+    marginHorizontal: 5,
   },
 });
 
