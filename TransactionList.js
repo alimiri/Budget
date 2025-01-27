@@ -4,7 +4,7 @@ import TransactionRow from "./TransactionRow";
 import TransactionModal from "./TransactionModal";
 import Database from "./Database";
 
-const TransactionList = ({ tags, readOnly = false }) => {
+const TransactionList = ({ tags, readOnly = false, externalFilter, onChangeSummary }) => {
   const [filterText, setFilterText] = useState("");
   const [filteredTags, setFilteredTags] = useState([]);
   const [fromDate, setFromDate] = useState(null);
@@ -45,19 +45,84 @@ const TransactionList = ({ tags, readOnly = false }) => {
       const matchesToDate =
         !toDate || new Date(transaction.TransactionDate) <= new Date(toDate);
 
-      return matchesText && matchesTags && matchesFromDate && matchesToDate;
+      let matchesExternalYears = true;
+      if (externalFilter && externalFilter.years && externalFilter.years.length > 0) {
+        const transactionYear = new Date(transaction.TransactionDate).getFullYear();
+        matchesExternalYears = externalFilter.years.includes(transactionYear);
+      }
+
+      let matchesExternalMonths = true;
+      if (externalFilter && externalFilter.months && externalFilter.months.length > 0) {
+        const transactionMonth = new Date(transaction.TransactionDate).getMonth() + 1;
+        matchesExternalMonths = externalFilter.months.includes(transactionMonth);
+      }
+
+      let matchesExternalTags = true;
+      if (externalFilter && externalFilter.tags && externalFilter.tags.length > 0) {
+        matchesExternalTags = transaction.tags.some((tag) => externalFilter.tags.includes(tag.id));
+      }
+
+      return matchesText && matchesTags && matchesFromDate && matchesToDate && matchesExternalYears && matchesExternalMonths && matchesExternalTags;
     });
   };
 
-  // Calculate totals for the ribbon
   const calculateTotals = () => {
-    const incomes = handleFilter()
+    const filteredTransactions = handleFilter();
+
+    // Calculate totals
+    const incomes = filteredTransactions
       .filter((transaction) => transaction.amount > 0)
       .reduce((sum, transaction) => sum + transaction.amount, 0);
-    const expenses = handleFilter()
+    const expenses = filteredTransactions
       .filter((transaction) => transaction.amount < 0)
       .reduce((sum, transaction) => sum + transaction.amount, 0);
     const total = incomes + expenses;
+
+    if (readOnly && onChangeSummary) {
+      // Summary by year
+      const years = filteredTransactions.reduce((acc, transaction) => {
+        const year = new Date(transaction.TransactionDate).getFullYear();
+        if (!acc[year]) acc[year] = { incomes: 0, expenses: 0 };
+        if (transaction.amount > 0) {
+          acc[year].incomes += transaction.amount;
+        } else {
+          acc[year].expenses += transaction.amount;
+        }
+        return acc;
+      }, {});
+
+      // Summary by month
+      const months = filteredTransactions.reduce((acc, transaction) => {
+        const month = new Date(transaction.TransactionDate).getMonth() + 1; // 1-based index for months
+        if (!acc[month]) acc[month] = { incomes: 0, expenses: 0 };
+        if (transaction.amount > 0) {
+          acc[month].incomes += transaction.amount;
+        } else {
+          acc[month].expenses += transaction.amount;
+        }
+        return acc;
+      }, {});
+
+      // Summary by tags
+      const tags = filteredTransactions.reduce((acc, transaction) => {
+        transaction.tags.forEach((tag) => {
+          if (!acc[tag.id]) acc[tag.id] = { incomes: 0, expenses: 0 };
+          if (transaction.amount > 0) {
+            acc[tag.id].incomes += transaction.amount;
+          } else {
+            acc[tag.id].expenses += transaction.amount;
+          }
+        });
+        return acc;
+      }, {});
+
+      // Call onChangeSummary with the summaries
+      onChangeSummary(
+        Object.entries(years).map(([index, data]) => ({ index: parseInt(index), ...data })),
+        Object.entries(months).map(([index, data]) => ({ index: parseInt(index), ...data })),
+        Object.entries(tags).map(([index, data]) => ({ index: parseInt(index), ...data }))
+      );
+    }
     return { incomes, expenses, total };
   };
 

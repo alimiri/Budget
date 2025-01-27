@@ -9,17 +9,19 @@ import IconAdmin from './IconAdmin';
 import Help from './Help';
 import Settings from './Settings';
 import TransactionList from './TransactionList';
+import ReportPage from './ReportPage';
 import Database from './Database';
 
 const Tab = createBottomTabNavigator();
 
 const TabBarIcon = ({ route, focused, size }) => {
   const icons = {
-    tags: 'castle',
-    icons: 'store',
-    transactions: 'trophy',
+    tags: 'tag',
+    icons: 'account-box-multiple-outline',
+    transactions: 'drag',
     help: 'book-open-outline',
     settings: 'cog',
+    reports: 'alarm-panel-outline',
   };
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -63,7 +65,6 @@ const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) =>
         tabBarShowLabel: false,
       })}
     >
-      {/* Pass props via `children` */}
       <Tab.Screen
         name="Transactions"
         children={() => (
@@ -73,7 +74,15 @@ const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) =>
         )}
       />
 
-      {/* Pass props via `children` */}
+      <Tab.Screen
+        name="Reports"
+        children={() => (
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <ReportPage tags={tags}/>
+          </GestureHandlerRootView>
+        )}
+      />
+
       <Tab.Screen
         name="Tags"
         children={() => (
