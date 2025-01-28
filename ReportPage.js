@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback  } from "react";
 import {
   View,
   Text,
@@ -36,16 +36,18 @@ const ReportPage = ({ tags }) => {
       });
     };
 
-    const handleChangeSummary = (years, months, tags) => {
-      const isSameSummary =
-        JSON.stringify(summary.years) === JSON.stringify(years) &&
-        JSON.stringify(summary.months) === JSON.stringify(months) &&
-        JSON.stringify(summary.tags) === JSON.stringify(tags);
+    const handleChangeSummary = useCallback((years, months, tags) => {
+        setTimeout(() => {
+            const isSameSummary =
+            JSON.stringify(summary.years) === JSON.stringify(years) &&
+            JSON.stringify(summary.months) === JSON.stringify(months) &&
+            JSON.stringify(summary.tags) === JSON.stringify(tags);
 
-      if (!isSameSummary) {
-        setSummary({ years, months, tags });
-      }
-    };
+          if (!isSameSummary) {
+            setSummary({ years, months, tags });
+          }
+        }, 0);
+      }, []);
 
     return (
       <View style={styles.container}>
