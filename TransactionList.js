@@ -161,9 +161,9 @@ const TransactionList = ({ tags, readOnly = false, externalFilter, onChangeSumma
         renderItem={({ item }) => (
           <TransactionRow
             transaction={item}
-            onDelete={() => (readOnly ? onDelete(item.id) : undefined)}
+            onDelete={() => (!readOnly ? onDelete(item.id) : undefined)}
             onEdit={
-              readOnly
+              !readOnly
                 ? () => {
                   setSelectedTransaction(item);
                   setModalVisible(true);
