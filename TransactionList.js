@@ -80,41 +80,20 @@ const TransactionList = ({ tags, readOnly = false, externalFilter, onChangeSumma
 
     if (readOnly && onChangeSummary) {
       // Summary by year
-      const years = filteredTransactions.reduce((acc, transaction) => {
+      const years = {};
+      const months = {};
+      const tags = {};
+      transactions.forEach(transaction => {
         const year = new Date(transaction.TransactionDate).getFullYear();
-        if (!acc[year]) acc[year] = { incomes: 0, expenses: 0 };
-        if (transaction.amount > 0) {
-          acc[year].incomes += transaction.amount;
-        } else {
-          acc[year].expenses += transaction.amount;
-        }
-        return acc;
-      }, {});
-
-      // Summary by month
-      const months = filteredTransactions.reduce((acc, transaction) => {
         const month = new Date(transaction.TransactionDate).getMonth() + 1; // 1-based index for months
-        if (!acc[month]) acc[month] = { incomes: 0, expenses: 0 };
-        if (transaction.amount > 0) {
-          acc[month].incomes += transaction.amount;
-        } else {
-          acc[month].expenses += transaction.amount;
-        }
-        return acc;
-      }, {});
 
-      // Summary by tags
-      const tags = filteredTransactions.reduce((acc, transaction) => {
-        transaction.tags.forEach((tag) => {
-          if (!acc[tag.id]) acc[tag.id] = { incomes: 0, expenses: 0 };
-          if (transaction.amount > 0) {
-            acc[tag.id].incomes += transaction.amount;
-          } else {
-            acc[tag.id].expenses += transaction.amount;
-          }
+        if (!years[year]) years[year] = { incomes: 0, expenses: 0 };
+        if (!months[month]) months[month] = { incomes: 0, expenses: 0 };
+
+        transaction.tags.forEach(tag => {
+          if (!tags[tag.id]) tags[tag.id] = { incomes: 0, expenses: 0 };
         });
-        return acc;
-      }, {});
+      });
 
       // Call onChangeSummary with the summaries
       onChangeSummary(

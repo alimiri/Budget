@@ -3,10 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import IconDisplay from './IconDisplay';
 
-const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete }) => {
-    const swipeableRef = useRef(null); // Create a ref for the Swipeable component
+const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete, selectable, isSelected, onSelect }) => {
+    const swipeableRef = useRef(null);
 
-    // Close the swipeable view when `isEditing` becomes true
     useEffect(() => {
         if (!isEditing && swipeableRef.current) {
             swipeableRef.current.close();
@@ -14,41 +13,38 @@ const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete }) => {
     }, [isEditing]);
 
     const handleCancelDelete = () => {
-        if (swipeableRef.current) {
-            swipeableRef.current.close(); // Close the swipeable view
-        }
-        if (onCancelDelete) {
-            onCancelDelete(); // Notify the parent component
-        }
+        if (swipeableRef.current) swipeableRef.current.close();
+        if (onCancelDelete) onCancelDelete();
+    };
+
+    const handleSelect = () => {
+        if (onSelect) onSelect(item.id);
+        if (swipeableRef.current) swipeableRef.current.close();
     };
 
     const renderRightActions = () => (
         <View style={styles.actionsContainer}>
-            <TouchableOpacity
-                onPress={() => onEdit(item.id)}
-                style={[styles.actionButton, styles.editButton]}
-            >
+            <TouchableOpacity onPress={() => onEdit(item.id)} style={[styles.actionButton, styles.editButton]}>
                 <Text style={styles.actionText}>Edit</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => onDelete(item.id, handleCancelDelete)} // Pass cancel handler
-                style={[styles.actionButton, styles.deleteButton]}
-            >
+            <TouchableOpacity onPress={() => onDelete(item.id, handleCancelDelete)} style={[styles.actionButton, styles.deleteButton]}>
                 <Text style={styles.actionText}>Delete</Text>
             </TouchableOpacity>
         </View>
     );
 
+    const renderLeftActions = () => (
+        selectable ? (
+            <TouchableOpacity onPress={handleSelect} style={[styles.selectButton, isSelected && styles.selected]}>
+                <Text style={styles.selectText}>{isSelected ? 'Deselect' : 'Select'}</Text>
+            </TouchableOpacity>
+        ) : null
+    );
+
     return (
-        <Swipeable
-            ref={swipeableRef} // Attach the ref to the Swipeable component
-            renderRightActions={renderRightActions}
-            overshootFriction={8}
-            overshootLeft={false}
-            overshootRight={false}
-        >
-            <View style={styles.itemContainer}>
-                <IconDisplay library={item.icon ? item.icon.split('/')[0] : 'Ionicons'} icon={item.icon ? item.icon.split('/')[1] : 'pricetag'} size={24} color="#555" style={styles.iconBox} />
+        <Swipeable ref={swipeableRef} renderRightActions={renderRightActions} renderLeftActions={renderLeftActions}>
+            <View style={[styles.itemContainer, isSelected && styles.selectedItem]}>
+                <IconDisplay library={item.icon ? item.icon.split('/')[0] : 'Ionicons'} icon={item.icon ? item.icon.split('/')[1] : 'pricetag'} size={24} color="#555" />
                 <Text style={styles.itemText} numberOfLines={1}>
                     {item.tagName}
                 </Text>
@@ -59,23 +55,21 @@ const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete }) => {
 
 const styles = StyleSheet.create({
     itemContainer: {
-        flexDirection: 'row', // Align items in a row
-        alignItems: 'center', // Center items vertically
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: '#fff',
         padding: 15,
         borderBottomWidth: 1,
         borderColor: '#ddd',
     },
+    selectedItem: {
+        backgroundColor: '#d3f9d8', // Light green for selected items
+    },
     itemText: {
         fontSize: 16,
         color: '#000',
-        marginLeft: 10, // Add spacing between the icon and text
-        flex: 1, // Allow text to take up remaining space
-    },
-    iconBox: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 10, // Add some spacing to the right of the icon
+        marginLeft: 10,
+        flex: 1,
     },
     actionsContainer: {
         flexDirection: 'row',
@@ -97,7 +91,20 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
     },
+    selectButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 75,
+        height: '100%',
+        backgroundColor: '#2196F3',
+    },
+    selected: {
+        backgroundColor: '#1976D2',
+    },
+    selectText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
 });
-
 
 export default TagItem;

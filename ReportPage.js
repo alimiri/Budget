@@ -86,7 +86,7 @@ const ReportPage = ({ tags }) => {
                 style={styles.iconButton}
                 onPress={() => handleIconClick("months", item.index)}
               >
-                <Text style={styles.iconText}>{monthNames[item.index]}</Text>
+                <Text style={styles.iconText}>{monthNames[item.index - 1]}</Text>
                 <Text style={styles.iconAmount}>
                   {item.incomes.toFixed(2)} | {item.expenses.toFixed(2)}
                 </Text>
@@ -122,7 +122,7 @@ const ReportPage = ({ tags }) => {
                   <Text style={styles.activeFilterText}>
                     {type === "tags"
                       ? tags.find((tag) => tag.id === index)?.tagName || "Unknown"
-                      : index}
+                      : type === "months" ? monthNames[item.index - 1] : index}
                   </Text>
                   <Text style={styles.removeText}>×</Text>
                 </TouchableOpacity>

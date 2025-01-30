@@ -10,7 +10,7 @@ let fullIconList = [];
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const ICON_ITEM_SIZE = 50; // Icon size + padding
 
-const TagsManager = ({onTagChanged}) => {
+const TagsManager = ({ onTagChanged, selectable = false, selectedList = [], onSelectedChange }) => {
   const [page, setPage] = useState(1);
   const [icons, setIcons] = useState(fullIconList.slice(0, 20));
   const popupWidth = screenWidth * 0.9; // 80% of screen width
@@ -26,6 +26,7 @@ const TagsManager = ({onTagChanged}) => {
   const [tags, setTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [editTagId, setEditTagId] = useState(null);
+  const [selectedTags, setSelectedTags] = useState(new Set(selectedList));
   const [icon, setIcon] = useState(null); // Store selected icon
   const pageSize = 10;
 
@@ -55,6 +56,19 @@ const TagsManager = ({onTagChanged}) => {
   const fetchTags = () => {
     setTags(Database.selectTags(searchQuery, pageSize));
   };
+
+  const toggleSelection = (tagId) => {
+    const updatedSelection = new Set(selectedTags);
+    if (updatedSelection.has(tagId)) {
+        updatedSelection.delete(tagId);
+    } else {
+        updatedSelection.add(tagId);
+    }
+    setSelectedTags(updatedSelection);
+    if (onSelectedChange) {
+        onSelectedChange(Array.from(updatedSelection));
+    }
+};
 
   const addTag = () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
@@ -113,7 +127,6 @@ const TagsManager = ({onTagChanged}) => {
 
   return (
     <View style={styles.container}>
-      {/* Unified Input Box */}
       <View style={styles.inputRow}>
         <TextInput
           style={styles.input}
@@ -147,19 +160,20 @@ const TagsManager = ({onTagChanged}) => {
 
       {/* Tag List */}
       <FlatList
-        data={tags}
-        keyExtractor={(item) => item.id.toString()}
-        onEndReached={loadMoreIcons}
-        onEndReachedThreshold={0.5}
-        renderItem={({ item }) => (
-          <TagItem
-            item={item}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            isEditing={!!editTagId}
-          />
-        )}
-      />
+                data={tags}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                    <TagItem
+                        item={item}
+                        onEdit={() => {}}
+                        onDelete={() => {}}
+                        isEditing={!!editTagId}
+                        selectable={selectable}
+                        isSelected={selectedTags.has(item.id)}
+                        onSelect={toggleSelection}
+                    />
+                )}
+            />
       <Modal visible={iconPickerVisible} animationType="fade" transparent={true}>
         <View style={styles.modalOverlay}>
           <View
@@ -246,8 +260,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#f9f9f9',
-  },
-  inputRow: {
+},
+inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
@@ -256,7 +270,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     marginBottom: 20,
-  },
+},
+input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 5,
+},
   iconContainer: {
     padding: 5,
     borderRadius: 8,
