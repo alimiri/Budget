@@ -4,7 +4,7 @@ import TransactionRow from "./TransactionRow";
 import TransactionModal from "./TransactionModal";
 import Database from "./Database";
 
-const TransactionList = ({ tags, readOnly = false, externalFilter, onChangeSummary }) => {
+const TransactionList = ({ tags, readOnly = false, externalFilter, onChangeSummary, onTagChanged }) => {
   const [filterText, setFilterText] = useState("");
   const [filteredTags, setFilteredTags] = useState([]);
   const [fromDate, setFromDate] = useState(null);
@@ -188,6 +188,7 @@ const TransactionList = ({ tags, readOnly = false, externalFilter, onChangeSumma
         }}
         tags={tags}
         transaction={selectedTransaction}
+        onTagChanged={onTagChanged}
       />
     </View>
   );

@@ -10,19 +10,15 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import IconDisplay from "./IconDisplay";
+import TagManager from "./TagManager";
 
-const TransactionModal = ({
-  visible,
-  onClose,
-  onSave,
-  tags,
-  transaction = null,
-}) => {
+const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, onTagChanged }) => {
   const [date, setDate] = useState(new Date());
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [isIncome, setIsIncome] = useState(true);
+  const [tagManagerVisible, setTagManagerVisible] = useState(false);
 
   useEffect(() => {
     if (transaction) {
@@ -32,7 +28,6 @@ const TransactionModal = ({
       setIsIncome(transaction.amount > 0);
       setSelectedTags(transaction.tags.map(_ => _.id) || []);
     } else {
-      // Reset form for adding a new transaction
       setDate(new Date());
       setDescription("");
       setAmount("");
@@ -48,7 +43,7 @@ const TransactionModal = ({
     }
 
     onSave({
-      date: date.toISOString().split("T")[0], // Save date as YYYY-MM-DD
+      date: date.toISOString().split("T")[0],
       description,
       amount: isIncome ? parseFloat(amount) : -parseFloat(amount),
       tags: selectedTags,
@@ -129,6 +124,14 @@ const TransactionModal = ({
 
             {/* Tags Selector */}
             <Text style={styles.label}>Tags</Text>
+            <TouchableOpacity
+              style={styles.tagManagerButton}
+              onPress={() => setTagManagerVisible(true)}
+            >
+              <Text style={styles.tagManagerText}>Manage Tags</Text>
+            </TouchableOpacity>
+
+            {/* Selected Tags Display */}
             <View style={styles.tagsContainer}>
               {tags.map((tag) => (
                 <TouchableOpacity
@@ -165,6 +168,22 @@ const TransactionModal = ({
           </View>
         </View>
       </View>
+
+      {tagManagerVisible && (
+        <Modal visible={tagManagerVisible} animationType="slide" transparent={true}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.tagManagerContainer}>
+              <TagManager
+                selectable={true}
+                selectedTags={selectedTags}
+                onSelectedChange={setSelectedTags}
+                onClose={() => setTagManagerVisible(false)}
+                onTagChanged={onTagChanged}
+              />
+            </View>
+          </View>
+        </Modal>
+      )}
     </Modal>
   );
 };
@@ -173,8 +192,16 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "center", // Center the modal content vertically
+    alignItems: "center", // Center the modal content horizontally
+  },
+  tagManagerContainer: {
+    width: "90%", // Take up 90% of the screen width
+    height: "50%", // Take up 50% of the screen height
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    paddingTop: 20,
+    elevation: 5,
   },
   modalContent: {
     width: "90%",
@@ -236,15 +263,30 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 5,
   },
-  tagButtonSelected: {
+  tagManagerButton: {
     backgroundColor: "#007AFF",
-    borderColor: "#007AFF",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginVertical: 5,
+  },
+  tagManagerText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  tagButtonSelected: {
+    flexDirection: "row",
+    backgroundColor: "#007AFF",
+    borderRadius: 5,
+    padding: 5,
+    margin: 5,
   },
   tagText: {
     color: "#000",
   },
   tagTextSelected: {
     color: "#fff",
+    marginLeft: 5,
   },
   buttonRow: {
     flexDirection: "row",

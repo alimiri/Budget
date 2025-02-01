@@ -20,6 +20,7 @@ const ReportPage = ({ tags }) => {
     const [summary, setSummary] = useState({ years: [], months: [], tags: [] });
 
     const handleIconClick = (type, index) => {
+      console.log(type, index);
       setExternalFilter((prev) => {
         if (prev[type].includes(index)) return prev; // Avoid redundant updates
         const updatedFilter = { ...prev };
@@ -66,35 +67,29 @@ const ReportPage = ({ tags }) => {
           <ScrollView contentContainerStyle={styles.filterIcons}>
 
             {/* Years */}
-            {summary.years.map((item) => (
+            {summary.years.filter(_ => !externalFilter.years.some(et => et === _.index)).map((item) => (
               <TouchableOpacity
                 key={item.index}
                 style={styles.iconButton}
                 onPress={() => handleIconClick("years", item.index)}
               >
                 <Text style={styles.iconText}>{item.index}</Text>
-                <Text style={styles.iconAmount}>
-                  {item.incomes.toFixed(2)} | {item.expenses.toFixed(2)}
-                </Text>
               </TouchableOpacity>
             ))}
 
             {/* Months */}
-            {summary.months.map((item) => (
+            {summary.months.filter(_ => !externalFilter.months.some(et => et === _.index)).map((item) => (
               <TouchableOpacity
                 key={item.index}
                 style={styles.iconButton}
                 onPress={() => handleIconClick("months", item.index)}
               >
                 <Text style={styles.iconText}>{monthNames[item.index - 1]}</Text>
-                <Text style={styles.iconAmount}>
-                  {item.incomes.toFixed(2)} | {item.expenses.toFixed(2)}
-                </Text>
               </TouchableOpacity>
             ))}
 
             {/* Tags */}
-            {summary.tags.map((item) => (
+            {summary.tags.filter(_ => !externalFilter.tags.some(et => et === _.index)).map((item) => (
               <TouchableOpacity
                 key={item.index}
                 style={styles.iconButton}
@@ -102,9 +97,6 @@ const ReportPage = ({ tags }) => {
               >
                 <Text style={styles.iconText}>
                   {tags.find((tag) => tag.id === item.index)?.tagName || "Unknown"}
-                </Text>
-                <Text style={styles.iconAmount}>
-                  {item.incomes.toFixed(2)} | {item.expenses.toFixed(2)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -122,7 +114,7 @@ const ReportPage = ({ tags }) => {
                   <Text style={styles.activeFilterText}>
                     {type === "tags"
                       ? tags.find((tag) => tag.id === index)?.tagName || "Unknown"
-                      : type === "months" ? monthNames[item.index - 1] : index}
+                      : type === "months" ? monthNames[index - 1] : index}
                   </Text>
                   <Text style={styles.removeText}>×</Text>
                 </TouchableOpacity>

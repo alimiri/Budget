@@ -10,7 +10,7 @@ let fullIconList = [];
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const ICON_ITEM_SIZE = 50; // Icon size + padding
 
-const TagsManager = ({ onTagChanged, selectable = false, selectedList = [], onSelectedChange }) => {
+const TagsManager = ({ onTagChanged, selectable = false, selectedTags = [], onSelectedChange, onClose }) => {
   const [page, setPage] = useState(1);
   const [icons, setIcons] = useState(fullIconList.slice(0, 20));
   const popupWidth = screenWidth * 0.9; // 80% of screen width
@@ -26,7 +26,6 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedList = [], onSe
   const [tags, setTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [editTagId, setEditTagId] = useState(null);
-  const [selectedTags, setSelectedTags] = useState(new Set(selectedList));
   const [icon, setIcon] = useState(null); // Store selected icon
   const pageSize = 10;
 
@@ -58,17 +57,18 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedList = [], onSe
   };
 
   const toggleSelection = (tagId) => {
-    const updatedSelection = new Set(selectedTags);
-    if (updatedSelection.has(tagId)) {
-        updatedSelection.delete(tagId);
+    let updatedSelection;
+    if (selectedTags.includes(tagId)) {
+      updatedSelection = selectedTags.filter(id => id !== tagId);
     } else {
-        updatedSelection.add(tagId);
+      updatedSelection = [...selectedTags, tagId];
     }
-    setSelectedTags(updatedSelection);
+
     if (onSelectedChange) {
-        onSelectedChange(Array.from(updatedSelection));
+      onSelectedChange(updatedSelection); // Pass the updated array
     }
-};
+  };
+
 
   const addTag = () => {
     if (!searchQuery) return Alert.alert('Error', 'Tag name cannot be empty');
@@ -94,7 +94,7 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedList = [], onSe
         {
           text: 'Cancel',
           onPress: () => {
-            if (cancelSwipe) cancelSwipe(); // Close swipe on cancel
+            if (cancelSwipe) cancelSwipe(); // Close swipe properly
           },
           style: 'cancel',
         },
@@ -104,6 +104,7 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedList = [], onSe
             Database.delTag(id);
             onTagChanged();
             fetchTags();
+            if (cancelSwipe) cancelSwipe(); // Ensure swipe action is reset
           },
           style: 'destructive',
         },
@@ -160,20 +161,20 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedList = [], onSe
 
       {/* Tag List */}
       <FlatList
-                data={tags}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <TagItem
-                        item={item}
-                        onEdit={() => {}}
-                        onDelete={() => {}}
-                        isEditing={!!editTagId}
-                        selectable={selectable}
-                        isSelected={selectedTags.has(item.id)}
-                        onSelect={toggleSelection}
-                    />
-                )}
-            />
+        data={tags}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <TagItem
+            item={item}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            isEditing={!!editTagId}
+            selectable={selectable}
+            isSelected={selectedTags.includes(item.id)} // Ensure this updates properly
+            onSelect={toggleSelection}
+          />
+        )}
+      />
       <Modal visible={iconPickerVisible} animationType="fade" transparent={true}>
         <View style={styles.modalOverlay}>
           <View
@@ -215,11 +216,38 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedList = [], onSe
           </View>
         </View>
       </Modal>
+      <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <Text style={styles.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  bottomBar: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#fff",  // Light background
+    padding: 15,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",  // Subtle divider
+    alignItems: "center",
+  },
+  closeButton: {
+    backgroundColor: "#007AFF",  // iOS-style blue button
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
@@ -251,17 +279,12 @@ const styles = StyleSheet.create({
     color: '#555',
     fontSize: 16,
   },
-  closeButton: {
-    backgroundColor: '#555',
-    borderRadius: 15,
-    padding: 5,
-  },
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: '#f9f9f9',
-},
-inputRow: {
+  },
+  inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
@@ -270,14 +293,14 @@ inputRow: {
     borderWidth: 1,
     borderColor: '#ddd',
     marginBottom: 20,
-},
-input: {
+  },
+  input: {
     flex: 1,
     borderWidth: 1,
     borderColor: '#ccc',
     padding: 10,
     borderRadius: 5,
-},
+  },
   iconContainer: {
     padding: 5,
     borderRadius: 8,

@@ -69,7 +69,7 @@ const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) =>
         name="Transactions"
         children={() => (
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <TransactionList tags={tags} readOnly={false}/>
+            <TransactionList tags={tags} readOnly={false} onTagChanged={onTagChanged}/>
           </GestureHandlerRootView>
         )}
       />
