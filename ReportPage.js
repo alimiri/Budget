@@ -20,7 +20,6 @@ const ReportPage = ({ tags }) => {
     const [summary, setSummary] = useState({ years: [], months: [], tags: [] });
 
     const handleIconClick = (type, index) => {
-      console.log(type, index);
       setExternalFilter((prev) => {
         if (prev[type].includes(index)) return prev; // Avoid redundant updates
         const updatedFilter = { ...prev };
