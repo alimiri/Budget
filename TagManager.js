@@ -216,11 +216,11 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedTags = [], onSe
           </View>
         </View>
       </Modal>
-      <View style={styles.bottomBar}>
+      {selectable && (<View style={styles.bottomBar}>
         <TouchableOpacity style={styles.closeButton} onPress={onClose}>
           <Text style={styles.closeButtonText}>Close</Text>
         </TouchableOpacity>
-      </View>
+      </View>)}
     </View>
   );
 };
