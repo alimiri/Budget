@@ -1,42 +1,27 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch } from 'react-native';
-import Slider from '@react-native-community/slider';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import * as FileSystem from 'expo-file-system';
 
-const Settings = ({ onColumnsChange, onAutoPopupChange, columns, autoPopup }) => {
-  const handleColumnsChange = (value) => {
-    onColumnsChange(value); // Notify parent about the change
-  };
+const deleteDatabase = async () => {
+  const dbName = 'Budget'; // Ensure this matches your database name
+  const dbPath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
 
-  const handleAutoPopupToggle = (value) => {
-    onAutoPopupChange(value);
-  };
+  try {
+    await FileSystem.deleteAsync(dbPath, { idempotent: true });
+    Alert.alert('Success', 'Database deleted successfully.');
+  } catch (error) {
+    Alert.alert('Error', `Failed to delete database: ${error.message}`);
+  }
+};
 
+const Settings = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Settings</Text>
 
-      {/* Number of Columns */}
-      <View style={styles.settingItem}>
-        <Text style={styles.label}>Number of Columns to Guess:</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={4}
-          maximumValue={8}
-          step={1}
-          value={columns}
-          onValueChange={handleColumnsChange}
-        />
-        <Text style={styles.value}>{columns}</Text>
-      </View>
-
-      {/* Auto Popup Checkbox */}
-      <View style={styles.settingItem}>
-        <Text style={styles.label}>Automatically open for the next cell:</Text>
-        <Switch
-          value={autoPopup}
-          onValueChange={handleAutoPopupToggle}
-        />
-      </View>
+      <TouchableOpacity style={styles.deleteButton} onPress={deleteDatabase}>
+        <Text style={styles.buttonText}>Delete Database</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -44,29 +29,26 @@ const Settings = ({ onColumnsChange, onAutoPopupChange, columns, autoPopup }) =>
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#f5f5f5',
+    padding: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  settingItem: {
-    marginVertical: 15,
+  deleteButton: {
+    backgroundColor: 'red',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
   },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  slider: {
-    width: '100%',
-    height: 40,
-  },
-  value: {
-    textAlign: 'center',
-    fontSize: 16,
-    marginTop: 10,
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

@@ -1,33 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import MainTabs from './MainTabs';
 import Database from './Database';
 
 const App = () => {
-  const [columns, setColumns] = useState(4); // Default number of columns
-  const [autoPopup, setAutoPopup] = useState(true); // Auto-popup behavior
-
+  const [columns, setColumns] = useState(4);
+  const [autoPopup, setAutoPopup] = useState(true);
+  const [dbInitialized, setDbInitialized] = useState(false);
 
   useEffect(() => {
-    console.log('Initializing database...');
-    Database.initializeDatabase();
+    try {
+      Database.initializeDatabase();
+      setDbInitialized(true);
+    } catch (error) {
+      console.error('Database initialization failed:', error);
+    }
   }, []);
 
-  const handleColumnsChange = (value) => {
-    setColumns(value);
-  };
-
-  const handleAutoPopupChange = (value) => {
-    setAutoPopup(value);
-  };
+  if (!dbInitialized) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#007AFF" />
+        <Text>Loading database...</Text>
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer>
       <MainTabs
         columns={columns}
         autoPopup={autoPopup}
-        onColumnsChange={handleColumnsChange}
-        onAutoPopupChange={handleAutoPopupChange}
+        onColumnsChange={setColumns}
+        onAutoPopupChange={setAutoPopup}
       />
     </NavigationContainer>
   );
