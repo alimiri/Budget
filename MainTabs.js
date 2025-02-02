@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconDisplay from './IconDisplay';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import TagManager from './TagManager';
@@ -16,26 +16,21 @@ const Tab = createBottomTabNavigator();
 
 const TabBarIcon = ({ route, focused, size }) => {
   const icons = {
-    tags: 'tag',
-    icons: 'account-box-multiple-outline',
-    transactions: 'drag',
-    help: 'book-open-outline',
-    settings: 'cog',
-    reports: 'alarm-panel-outline',
+    Tags: {icon: 'document-attach-outline', library:'Ionicons'},
+    Icons: {icon: 'account-box-multiple-outline', library:'MaterialCommunityIcons'},
+    Transaction: {icon: 'list', library:'Entypo'},
+    Help: {icon: 'help-outline', library:'MaterialIcons'},
+    Settings: {icon: 'settings-outline', library:'Ionicons'},
+    Reports: {icon: 'calculator', library:'SimpleLineIcons'},
   };
 
   const animatedStyle = useAnimatedStyle(() => ({
     height: withTiming(focused ? 60 : 50, { duration: 300 }),
     backgroundColor: withTiming(focused ? '#f8f9fa' : 'transparent', { duration: 300 }),
   }));
-
   return (
     <Animated.View style={[styles.iconContainer, animatedStyle]}>
-      <Icon
-        name={icons[route.toLowerCase()]}
-        size={focused ? size + 5 : size}
-        color={focused ? '#007AFF' : '#8e8e93'}
-      />
+      <IconDisplay library={icons[route].library} icon={icons[route].icon} size={focused ? size + 5 : size} color={focused ? '#007AFF' : '#8e8e93'} />
       {focused && <Text style={styles.label}>{route}</Text>}
     </Animated.View>
   );
@@ -66,7 +61,7 @@ const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) =>
       })}
     >
       <Tab.Screen
-        name="Transactions"
+        name="Transaction"
         children={() => (
           <GestureHandlerRootView style={{ flex: 1 }}>
             <TransactionList tags={tags} readOnly={false} onTagChanged={onTagChanged}/>
@@ -134,7 +129,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexGrow: 1,
-    minWidth: 60,
+    minWidth: 80, // Increase width to prevent text wrapping
     minHeight: 60,
     paddingVertical: 5,
     borderRadius: 10,

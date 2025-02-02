@@ -19,6 +19,7 @@ const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, 
   const [selectedTags, setSelectedTags] = useState([]);
   const [isIncome, setIsIncome] = useState(true);
   const [tagManagerVisible, setTagManagerVisible] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
     if (transaction) {
@@ -35,6 +36,13 @@ const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, 
       setSelectedTags([]);
     }
   }, [transaction]);
+
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false); // Hide picker after selection
+    if (selectedDate) {
+      setDate(selectedDate);
+    }
+  };
 
   const handleSave = () => {
     if (!description || !amount) {
@@ -68,14 +76,19 @@ const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, 
           <ScrollView>
             {/* Date Picker */}
             <Text style={styles.label}>Date</Text>
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="default"
-              onChange={(event, selectedDate) =>
-                setDate(selectedDate || date)
-              }
-            />
+            <Text style={styles.label}>Date</Text>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
+              <Text>{date.toISOString().split("T")[0]}</Text>
+            </TouchableOpacity>
+
+            {showDatePicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            )}
 
             {/* Description Input */}
             <Text style={styles.label}>Description</Text>

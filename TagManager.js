@@ -139,7 +139,7 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedTags = [], onSe
           onPress={() => setIconPickerVisible(true)}
           style={styles.iconContainer}
         >
-          <IconDisplay library={icon ? icon.library : 'EvilIcons'} icon={icon ? icon.icon : 'navicon'} size={24} color="#555" />
+          <IconDisplay library={icon ? icon.library : 'EvilIcons'} icon={icon ? icon.icon : 'image'} size={30} color="#555" />
         </TouchableOpacity>
         {editTagId ? (
           <View style={styles.iconRow}>
