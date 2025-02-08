@@ -23,9 +23,14 @@ const TransactionRow = ({ transaction, onDelete, onEdit, isEditing, onCancelDele
 
   const renderRightActions = () => {
     if (readOnly) return null;
-    return(<View style={styles.actionsContainer}>
+    return (<View style={styles.actionsContainer}>
       <TouchableOpacity
-        onPress={() => onEdit(transaction.id)}
+        onPress={() => {
+          if (swipeableRef.current) {
+            swipeableRef.current.close();
+          }
+          onEdit(transaction.id);
+        }}
         style={[styles.actionButton, styles.editButton]}
       >
         <Text style={styles.actionText}>Edit</Text>

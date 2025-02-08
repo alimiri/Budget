@@ -35,7 +35,7 @@ const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, 
       setIsIncome(true);
       setSelectedTags([]);
     }
-  }, [transaction]);
+  }, [transaction, visible]);
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false); // Hide picker after selection

@@ -96,7 +96,7 @@ const Database = {
 
     selectTransactions: () => {
         const db = SQLite.openDatabaseSync(dbName);
-        const stmt = db.prepareSync('SELECT * FROM Transactions');
+        const stmt = db.prepareSync('SELECT * FROM Transactions Order By TransactionDate DESC');
         const rows = stmt.executeSync().getAllSync();
 
         const stmt2 = db.prepareSync('SELECT t.* FROM TransactionTags tt INNER JOIN Tags t on t.id = tt.TagId where tt.TransactionId = ?');
