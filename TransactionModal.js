@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import IconDisplay from "./IconDisplay";
@@ -20,10 +21,19 @@ const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, 
   const [isIncome, setIsIncome] = useState(true);
   const [tagManagerVisible, setTagManagerVisible] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tempDateInput, setTempDateInput] = useState(date.toISOString().split("T")[0]);
+
+  useEffect(() => {
+    setTempDateInput(date.toISOString().split("T")[0]);
+  }, [date]);
 
   useEffect(() => {
     if (transaction) {
-      setDate(new Date(transaction.TransactionDate));
+      // Fixing Date Shift Issue
+      const savedDate = new Date(transaction.TransactionDate);
+      const adjustedDate = new Date(savedDate.getTime() + savedDate.getTimezoneOffset() * 60000);
+      setDate(adjustedDate);
+
       setDescription(transaction.description);
       setAmount(Math.abs(transaction.amount).toString());
       setIsIncome(transaction.amount > 0);
@@ -38,24 +48,40 @@ const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, 
   }, [transaction, visible]);
 
   const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false); // Hide picker after selection
+    setShowDatePicker(false);
     if (selectedDate) {
       setDate(selectedDate);
     }
   };
 
-  const handleSave = () => {
-    if (!description || !amount) {
-      alert("Please fill in all required fields.");
-      return;
+  const handleManualDateChange = (text) => {
+    // Remove any non-numeric characters
+    let cleaned = text.replace(/[^0-9]/g, '');
+
+    // Format as YYYY-MM-DD
+    if (cleaned.length > 4 && cleaned.length <= 6) {
+      cleaned = cleaned.replace(/(\d{4})(\d{1,2})/, '$1-$2');
+    } else if (cleaned.length > 6) {
+      cleaned = cleaned.replace(/(\d{4})(\d{2})(\d{1,2})/, '$1-$2-$3');
     }
 
-    onSave({
-      date: date.toISOString().split("T")[0],
-      description,
-      amount: isIncome ? parseFloat(amount) : -parseFloat(amount),
-      tags: selectedTags,
-    });
+    // Update the temporary date input state
+    setTempDateInput(cleaned);
+
+    // If the date is fully entered, validate and update the main date state
+    if (cleaned.length === 10) {
+      const [year, month, day] = cleaned.split('-').map(Number);
+      const newDate = new Date(year, month - 1, day);
+
+      // Check if the date is valid (e.g., no Feb 30)
+      if (
+        newDate.getFullYear() === year &&
+        newDate.getMonth() === month - 1 &&
+        newDate.getDate() === day
+      ) {
+        setDate(newDate);
+      }
+    }
   };
 
   const handleTagSelection = (tagId) => {
@@ -76,19 +102,49 @@ const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, 
           <ScrollView>
             {/* Date Picker */}
             <Text style={styles.label}>Date</Text>
-            <Text style={styles.label}>Date</Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
-              <Text>{date.toISOString().split("T")[0]}</Text>
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TextInput
+                  style={styles.input}
+                  value={tempDateInput}
+                  onChangeText={handleManualDateChange}
+                  placeholder="YYYY-MM-DD"
+                  keyboardType="numeric"
+                />
+                <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                  <IconDisplay library='Ionicons' icon='calendar-outline' size={24} color="green" />
+                </TouchableOpacity>
+              </View>
 
-            {showDatePicker && (
-              <DateTimePicker
-                value={date}
-                mode="date"
-                display="default"
-                onChange={handleDateChange}
-              />
-            )}
+              {showDatePicker && (
+                Platform.OS === 'ios' ? (
+                  <Modal
+                    transparent={true}
+                    animationType="slide"
+                    visible={showDatePicker}
+                    onRequestClose={() => setShowDatePicker(false)}
+                  >
+                    <View style={styles.modalOverlay}>
+                      <DateTimePicker
+                        style={styles.datePicker}
+                        mode="date"
+                        value={date}
+                        display="inline"
+                        onChange={handleDateChange}
+                      />
+                    </View>
+                  </Modal>
+                ) : (
+                  <DateTimePicker
+                    mode="date"
+                    value={date}
+                    display="default"
+                    onChange={handleDateChange}
+                  />
+                )
+              )}
+            </View>
+
 
             {/* Description Input */}
             <Text style={styles.label}>Description</Text>
@@ -175,7 +231,14 @@ const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, 
             <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+            <TouchableOpacity style={styles.saveButton} onPress={() => {
+              onSave({
+                date: date.toISOString().split("T")[0], // Store in YYYY-MM-DD format
+                description,
+                amount: isIncome ? parseFloat(amount) : -parseFloat(amount),
+                tags: selectedTags,
+              });
+            }}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
           </View>
@@ -204,9 +267,50 @@ const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, 
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center", // Center the modal content vertically
-    alignItems: "center", // Center the modal content horizontally
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  datePicker: {
+    backgroundColor: "lightgreen",
+    borderRadius: 10,
+    width: "80%",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  pickerContainer: {
+    backgroundColor: "#fff", // Ensures background is solid white
+    borderRadius: 10,
+    padding: 10,
+    width: "80%",
+    alignSelf: "center",
+  },
+  dateContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  dateInput: {
+    flex: 1,
+    fontSize: 16,
+  },
+  dateButton: {
+    padding: 5,
+    marginLeft: 10,
+  },
+  dateButtonText: {
+    fontSize: 18,
+  },
+
+  dateText: {
+    fontSize: 16,
   },
   tagManagerContainer: {
     width: "90%", // Take up 90% of the screen width
