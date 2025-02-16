@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import * as FileSystem from 'expo-file-system';
 
 const dbName = 'Budget';
 
@@ -17,6 +18,44 @@ const Database = {
         db.execSync('CREATE TABLE IF NOT EXISTS Transactions (id INTEGER PRIMARY KEY AUTOINCREMENT, TransactionDate datetime, description TEXT, amount money);');
         db.execSync('CREATE TABLE IF NOT EXISTS TransactionTags (id INTEGER PRIMARY KEY AUTOINCREMENT, TransactionId INTEGER, TagId INTEGER);');
 
+        db.execSync('CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY AUTOINCREMENT, setting TEXT);');
+
+        db.closeSync();
+    },
+
+    deleteDatabase: async () => {
+        const dbPath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
+        const result = {
+            status: 'success',
+            error: null,
+        };
+        try {
+            await FileSystem.deleteAsync(dbPath, { idempotent: true });
+        } catch (error) {
+            result.status = 'failed';
+            result.error = error.message;
+        }
+        return result;
+    },
+
+    getSettings: () => {
+        const db = SQLite.openDatabaseSync(dbName);
+        const stmt = db.prepareSync('SELECT setting FROM settings LIMIT 1');
+        const result = stmt.executeSync().getAllSync();
+
+        stmt.finalizeSync();
+        db.closeSync();
+
+        return result.length > 0 ? JSON.parse(result[0].setting) : {};
+    },
+
+    updateSettings: (setting) => {
+        const db = SQLite.openDatabaseSync(dbName);
+        const stmt = db.prepareSync('INSERT OR REPLACE INTO settings (id, setting) VALUES(1, ?)');
+
+        stmt.executeSync([JSON.stringify(setting)]);
+
+        stmt.finalizeSync();
         db.closeSync();
     },
 

@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import MainTabs from './MainTabs';
 import Database from './Database';
+import { SettingsProvider } from './SettingsContext';
 
 const App = () => {
   const [columns, setColumns] = useState(4);
@@ -28,14 +29,16 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer>
-      <MainTabs
-        columns={columns}
-        autoPopup={autoPopup}
-        onColumnsChange={setColumns}
-        onAutoPopupChange={setAutoPopup}
-      />
-    </NavigationContainer>
+    <SettingsProvider>
+      <NavigationContainer>
+        <MainTabs
+          columns={columns}
+          autoPopup={autoPopup}
+          onColumnsChange={setColumns}
+          onAutoPopupChange={setAutoPopup}
+        />
+      </NavigationContainer>
+    </SettingsProvider>
   );
 };
 

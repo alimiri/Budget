@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   FlatList,
@@ -13,6 +13,7 @@ import TransactionRow from "./TransactionRow";
 import TransactionModal from "./TransactionModal";
 import Database from "./Database";
 import IconDisplay from "./IconDisplay";
+import { useSettings } from './SettingsContext';
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -22,22 +23,62 @@ const TransactionList = ({ tags, readOnly = false }) => {
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
   const [externalFilter, setExternalFilter] = useState({ years: [], months: [], tags: [] });
-  const [summary, setSummary] = useState({ years: [], months: [], tags: [] });
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [filterVisible, setFilterVisible] = useState(false);
-
-
-  const [totals, setTotals] = useState({ incomes: 0, expenses: 0 });
   const filterWidthAnim = useState(new Animated.Value(0))[0]; // Initial filter width (0% when hidden)
+  const [periodOffset, setPeriodOffset] = useState(0); // Offset for navigating periods
+  const [debouncedFilterText, setDebouncedFilterText] = useState(filterText);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedFilterText(filterText);
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [filterText]);
+
+  const {
+    periodType,
+    nDays,
+    firstDayOfMonth,
+  } = useSettings();
 
   useEffect(() => {
     setTransactions(Database.selectTransactions());
-  }, []);
+    updateDateRange();
+  }, [periodType, nDays, firstDayOfMonth, periodOffset, fromDate, toDate]);
 
-  useEffect(() => {
-    calculateTotals();
-  }, [transactions]); // Recalculate when transactions change
+  const updateDateRange = () => {
+    let newFromDate, newToDate;
+    const today = new Date();
+
+    if (periodType === 'lastNDays') {
+      newFromDate = new Date(today);
+      newFromDate.setDate(newFromDate.getDate() + nDays * (periodOffset - 1) + 1);
+      newToDate = new Date(today);
+      newToDate.setDate(newToDate.getDate() + nDays * periodOffset);
+    } else if (periodType === 'monthly') {
+      console.log("Period Offset:", periodOffset);
+      let targetMonth = today.getMonth() + periodOffset;
+      let targetYear = today.getFullYear();
+      while(targetMonth < 0) {
+        targetMonth += 12;
+        targetYear -= 1;
+      }
+      while(targetMonth > 11) {
+        targetMonth -= 12;
+        targetYear += 1;
+      }
+      newFromDate = new Date(targetYear, targetMonth, firstDayOfMonth);
+      newToDate = new Date(targetYear, targetMonth + 1, firstDayOfMonth - 1);
+    }
+
+    setFromDate(newFromDate.toISOString().split('T')[0]);
+    setToDate(newToDate.toISOString().split('T')[0]);
+  };
 
   const toggleFilterPanel = () => {
     setFilterVisible((prevState) => {
@@ -51,6 +92,10 @@ const TransactionList = ({ tags, readOnly = false }) => {
       ]).start();
       return newState;
     });
+  };
+
+  const handlePeriodChange = (step) => {
+    setPeriodOffset(prev => prev + step);
   };
 
   const onAdd = (transaction) => {
@@ -76,9 +121,9 @@ const TransactionList = ({ tags, readOnly = false }) => {
     });
   };
 
-  const handleFilter = () => {
+  const filteredTransactions = useMemo(() => {
     return transactions.filter((transaction) => {
-      const matchesText = transaction.description.toLowerCase().includes(filterText.toLowerCase()) || transaction.amount.toString().includes(filterText);
+      const matchesText = transaction.description.toLowerCase().includes(debouncedFilterText.toLowerCase()) || transaction.amount.toString().includes(debouncedFilterText);
       const matchesFromDate = !fromDate || new Date(transaction.TransactionDate) >= new Date(fromDate);
       const matchesToDate = !toDate || new Date(transaction.TransactionDate) <= new Date(toDate);
       const matchesYear = externalFilter.years.length === 0 || externalFilter.years.includes(new Date(transaction.TransactionDate).getFullYear());
@@ -86,35 +131,34 @@ const TransactionList = ({ tags, readOnly = false }) => {
       const matchesTags = externalFilter.tags.length === 0 || transaction.tags.some((tag) => externalFilter.tags.includes(tag.id));
       return matchesText && matchesFromDate && matchesToDate && matchesYear && matchesMonth && matchesTags;
     });
-  };
+  }, [transactions, debouncedFilterText, fromDate, toDate, externalFilter]);
 
-  const calculateTotals = () => {
-    const filteredTransactions = handleFilter();
-
+  const totals = useMemo(() => {
     const incomes = filteredTransactions.filter((transaction) => transaction.amount > 0).reduce((sum, transaction) => sum + transaction.amount, 0);
     const expenses = filteredTransactions.filter((transaction) => transaction.amount < 0).reduce((sum, transaction) => sum + transaction.amount, 0);
-    setTotals({ incomes, expenses });
+    return { incomes, expenses };
+  }, [filteredTransactions]);
 
+  const summary = useMemo(() => {
     const years = new Set();
     const months = new Set();
     const tags = new Set();
     transactions.forEach(transaction => {
       const year = new Date(transaction.TransactionDate).getFullYear();
       const month = new Date(transaction.TransactionDate).getMonth();
-
       years.add(year);
       months.add(month);
       if (transaction.tags && Array.isArray(transaction.tags)) {
         transaction.tags.forEach((tag) => tags.add(tag.id));
       }
     });
-
-    setSummary({
+    return {
       years: Array.from(years),
       months: Array.from(months),
       tags: Array.from(tags)
-    });
-  };
+    };
+  }, [transactions]);
+
   return (
     <View style={styles.container}>
       <View style={styles.topSection}>
@@ -125,15 +169,24 @@ const TransactionList = ({ tags, readOnly = false }) => {
             <TextInput
               style={styles.filterInput}
               placeholder="Filter by description or amount"
-              value={filterText}
+              value={debouncedFilterText}
               onChangeText={setFilterText}
             />
             <TouchableOpacity style={styles.filterButton} onPress={toggleFilterPanel}>
-              <IconDisplay library='MaterialCommunityIcons' icon='filter-outline' size={24} color={filterVisible ? "#555" : "#000"} />
+              <IconDisplay
+                library='MaterialCommunityIcons'
+                icon='filter-outline'
+                size={24}
+                color={filterVisible ? "#555" : "#000"}
+                backgroundColor={externalFilter.years.length || externalFilter.months.length || externalFilter.tags.length ? 'rgb(127,127,255)' : ""}
+              />
             </TouchableOpacity>
           </View>
           {/* Date Range Filter */}
           <View style={styles.dateFilterBar}>
+            <TouchableOpacity style={styles.periodButton} onPress={() => handlePeriodChange(-1)}>
+              <Text style={styles.periodButtonText}>{"<"}</Text>
+            </TouchableOpacity>
             <TextInput
               style={styles.dateInput}
               placeholder="From Date (YYYY-MM-DD)"
@@ -146,11 +199,17 @@ const TransactionList = ({ tags, readOnly = false }) => {
               value={toDate}
               onChangeText={setToDate}
             />
+            <TouchableOpacity style={styles.periodButton} onPress={() => handlePeriodChange(1)}>
+              <Text style={styles.periodButtonText}>{">"}</Text>
+            </TouchableOpacity>
           </View>
           {/* Transactions List */}
           <FlatList
-            data={handleFilter()}
+            data={filteredTransactions}
             keyExtractor={(item) => item.id.toString()}
+            initialNumToRender={10}
+            windowSize={5}
+            removeClippedSubviews={true}
             renderItem={({ item }) => (
               <TransactionRow
                 transaction={item}
@@ -239,8 +298,6 @@ const TransactionList = ({ tags, readOnly = false }) => {
         </Text>
       </View>
 
-
-
       {/* Transaction Modal */}
       <TransactionModal
         visible={modalVisible}
@@ -262,6 +319,29 @@ const TransactionList = ({ tags, readOnly = false }) => {
 };
 
 const styles = StyleSheet.create({
+  periodButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "#007bff",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  periodButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+  navButton: {
+    backgroundColor: "#f0f0f0",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
   container: {
     flex: 1,
     flexDirection: "column", // Stacks top and bottom sections
@@ -308,7 +388,7 @@ const styles = StyleSheet.create({
   },
   header: { flexDirection: "row", alignItems: "center", padding: 10 },
   filterInput: { flex: 1, borderWidth: 1, borderColor: "#ccc", padding: 5, borderRadius: 5 },
-  filterButton: { padding: 10, backgroundColor: "#007AFF", borderRadius: 5, marginLeft: 10 },
+  filterButton: { padding: 10, borderRadius: 5, marginLeft: 10 },
   filterButtonText: { color: "white" },
   addButton: {
     position: "absolute",
