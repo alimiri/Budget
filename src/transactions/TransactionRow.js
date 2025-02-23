@@ -2,9 +2,15 @@ import React, { useRef, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import IconDisplay from "../icons/IconDisplay";
+import { useSettings } from '../../SettingsContext';
 
 const TransactionRow = ({ transaction, onDelete, onEdit, isEditing, onCancelDelete, readOnly }) => {
   const swipeableRef = useRef(null);
+
+  const {
+    showCreditPercent,
+    showCreditAmount,
+  } = useSettings();
 
   useEffect(() => {
     if (!isEditing && swipeableRef.current) {
@@ -84,7 +90,18 @@ const TransactionRow = ({ transaction, onDelete, onEdit, isEditing, onCancelDele
                   size={16}
                   color="#555"
                 />
-                <Text style={styles.tagText}>{tag.tagName}</Text>
+                <Text style={styles.tagText}>
+                  {tag.tagName}
+                  {(showCreditPercent || showCreditAmount) && tag.creditAmount !== null && tag.creditAmount !== '' && tag.creditType !== "None" ? (
+                    <Text>
+                      {" ("}
+                      <Text style={styles.usedCreditText}>{tag.creditUsed ?? 0}</Text>
+                      {"/"}
+                      <Text style={styles.creditText}>{tag.creditAmount}</Text>
+                      {")"}
+                    </Text>
+                  ) : ''}
+                </Text>
               </View>
             ))}
           </View>
@@ -95,6 +112,18 @@ const TransactionRow = ({ transaction, onDelete, onEdit, isEditing, onCancelDele
 };
 
 const styles = StyleSheet.create({
+  tagText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  creditText: {
+    color: 'green',
+    fontWeight: 'bold',
+  },
+  usedCreditText: {
+    color: 'red',
+    fontWeight: 'bold',
+  },
   rowContainer: {
     backgroundColor: "#fff",
     borderBottomWidth: 1,

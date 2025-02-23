@@ -10,8 +10,8 @@ const TABLES = {
         tagName TEXT UNIQUE,
         icon TEXT,
         creditType TEXT CHECK (creditType IN ('None', 'NoPeriod', 'Yearly', 'Monthly', 'Weekly')),
-        creditAmount REAL DEFAULT NULL,  -- Defines the allocated credit for this tag
-        startDay INTEGER DEFAULT NULL    -- Used for Monthly (1-30) and Weekly (1-7, where 1 = Monday)
+        creditAmount REAL DEFAULT NULL,
+        startDay INTEGER DEFAULT NULL    -- src/constants/weekdays.js
     );`,
     icons: `CREATE TABLE IF NOT EXISTS icons (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -118,7 +118,7 @@ const Database = {
     updateTag: (tagName, icon, creditType, creditAmount, startDay, id) => {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('UPDATE tags SET tagName = ?, icon = ?, creditType = ?, creditAmount = ?, startDay = ? WHERE id = ?');
-        stmt.executeSync(tagName, icon, creditType, creditAmount, startDay, id);
+        stmt.executeSync(tagName, icon, creditType, creditAmount === '' ? null : creditAmount, startDay, id);
 
         stmt.finalizeSync();
         db.closeSync();
