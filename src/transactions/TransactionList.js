@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import TransactionRow from "./TransactionRow";
 import TransactionModal from "./TransactionModal";
-import Database from "./Database";
-import IconDisplay from "./IconDisplay";
-import { useSettings } from './SettingsContext';
+import Database from "../../Database";
+import IconDisplay from "../icons/IconDisplay";
+import { useSettings } from '../../SettingsContext';
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -61,7 +61,6 @@ const TransactionList = ({ tags, readOnly = false }) => {
       newToDate = new Date(today);
       newToDate.setDate(newToDate.getDate() + nDays * periodOffset);
     } else if (periodType === 'monthly') {
-      console.log("Period Offset:", periodOffset);
       let targetMonth = today.getMonth() + periodOffset;
       let targetYear = today.getFullYear();
       while(targetMonth < 0) {

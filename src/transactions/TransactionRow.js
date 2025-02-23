@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
-import IconDisplay from "./IconDisplay";
+import IconDisplay from "../icons/IconDisplay";
 
 const TransactionRow = ({ transaction, onDelete, onEdit, isEditing, onCancelDelete, readOnly }) => {
   const swipeableRef = useRef(null);

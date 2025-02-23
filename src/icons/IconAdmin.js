@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker'; // Import the DocumentPicker
 import Papa from 'papaparse'; // CSV parsing library
-import Database from './Database';
+import Database from '../../Database';
 import IconDisplay from './IconDisplay';
 import { libraries, iconData } from './IconConfig';
 import * as Sharing from 'expo-sharing';
@@ -17,7 +17,7 @@ const numColumns = Math.floor(screenWidth / ICON_ITEM_SIZE);
 const importLocalCSV = async () => {
   let asset;
   try {
-    asset = Asset.fromModule(require('./assets/iconList.csv')); // Update with your CSV file path
+    asset = Asset.fromModule(require('../../assets/iconList.csv')); // Update with your CSV file path
   } catch (error) {
     console.error('Error loading asset:', error);
   }

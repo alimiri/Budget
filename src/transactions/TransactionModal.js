@@ -10,8 +10,8 @@ import {
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import IconDisplay from "./IconDisplay";
-import TagManager from "./TagManager";
+import IconDisplay from "../icons/IconDisplay";
+import TagManager from "../tags/TagManager";
 
 const TransactionModal = ({ visible, onClose, onSave, tags, transaction = null, onTagChanged }) => {
   const [date, setDate] = useState(new Date());

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import IconDisplay from './IconDisplay';
+import IconDisplay from './src/icons/IconDisplay';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import TagManager from './TagManager';
-import IconAdmin from './IconAdmin';
+import TagManager from './src/tags/TagManager';
+import IconAdmin from './src/icons/IconAdmin';
 import Help from './Help';
 import Settings from './Settings';
-import TransactionList from './TransactionList';
+import TransactionList from './src/transactions/TransactionList';
 import Database from './Database';
 
 const Tab = createBottomTabNavigator();

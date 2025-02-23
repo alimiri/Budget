@@ -1,64 +1,75 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 
-export default () => {
+const HelpComponent = () => {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>How to Play Mastermind</Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Help & Guide</Text>
 
-      <Text style={styles.section}>🎯 Objective</Text>
-      <Text style={styles.text}>
-        The goal of the game is to guess the secret code (a sequence of numbers).
-      </Text>
+      <View style={styles.section}>
+        <Text style={styles.subtitle}>Transactions</Text>
+        <Text style={styles.text}>
+          The Transactions screen displays all your financial transactions.
+          Use the top ribbon to filter transactions by date, description, or amount.
+          Click the extra filters button to filter by month, year, and tags.
+        </Text>
+        <Text style={styles.text}>
+          At the bottom, you can see the total incomes, expenses, and the balance.
+        </Text>
+      </View>
 
-      <Text style={styles.section}>📋 Rules</Text>
-      <Text style={styles.text}>
-        1. Enter your guesses in the active row.
-        {'\n'}2. Use the popup to select numbers.
-        {'\n'}3. Feedback will be provided after each guess:
-      </Text>
-      <Text style={styles.text}>
-        - **Exact**: The number and its position are correct.
-        {'\n'}- **Correct**: The number is correct but the position is wrong.
-      </Text>
+      <View style={styles.section}>
+        <Text style={styles.subtitle}>Tags</Text>
+        <Text style={styles.text}>
+          Each transaction can have 0 to n tags, allowing better categorization.
+          Tags can be used to filter and view transactions in multiple categories.
+        </Text>
+        <Text style={styles.text}>
+          Each tag includes a name and an icon chosen from predefined icons.
+        </Text>
+      </View>
 
-      <Text style={styles.section}>💡 Tips</Text>
-      <Text style={styles.text}>
-        - Start with random guesses to gather initial clues.
-        {'\n'}- Use feedback to systematically narrow down the possibilities.
-      </Text>
-
-      <Text style={styles.section}>🚀 Enjoy the Game!</Text>
-      <Text style={styles.text}>
-        Mastermind is a game of logic and deduction. Have fun while honing your problem-solving skills!
-      </Text>
+      <View style={styles.section}>
+        <Text style={styles.subtitle}>Settings</Text>
+        <Text style={styles.text}>
+          You can manage the period of listed transactions:
+        </Text>
+        <Text style={styles.text}>
+          - Last N Days: Displays transactions from the past N days. You can specify N in the settings.
+        </Text>
+        <Text style={styles.text}>
+          - Monthly: Displays transactions for a month, starting from a custom day.
+          You can set the first day of the month (1 to 30).
+        </Text>
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 15,
-    color: '#007AFF',
+    marginBottom: 20,
     textAlign: 'center',
   },
   section: {
-    fontSize: 18,
+    marginBottom: 20,
+  },
+  subtitle: {
+    fontSize: 22,
     fontWeight: 'bold',
-    marginTop: 20,
     marginBottom: 10,
-    color: '#333',
   },
   text: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#555',
   },
 });
+
+export default HelpComponent;

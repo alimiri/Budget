@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import IconDisplay from './IconDisplay';
+import IconDisplay from '../icons/IconDisplay';
+import { WEEKDAYS } from '../constants/weekdays';
 
 const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete, selectable, isSelected, onSelect }) => {
     const swipeableRef = useRef(null);
@@ -24,7 +25,7 @@ const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete, selectable
 
     const renderRightActions = () => (
         <View style={styles.actionsContainer}>
-            <TouchableOpacity onPress={() => onEdit(item.id)} style={[styles.actionButton, styles.editButton]}>
+            <TouchableOpacity onPress={() => onEdit(item.id, handleCancelDelete)} style={[styles.actionButton, styles.editButton]}>
                 <Text style={styles.actionText}>Edit</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => onDelete(item.id, handleCancelDelete)} style={[styles.actionButton, styles.deleteButton]}>
@@ -41,13 +42,40 @@ const TagItem = ({ item, onEdit, onDelete, isEditing, onCancelDelete, selectable
         ) : null
     );
 
+    const getCreditText = () => {
+            if (!item.creditType || item.creditType === 'None') return null;
+
+            let creditInfo = `Credit: ${item.creditAmount || 0}`;
+
+            switch (item.creditType) {
+                case 'No period':
+                    creditInfo += ' (Fixed)';
+                    break;
+                case 'Yearly':
+                    creditInfo += ' (Yearly)';
+                    break;
+                case 'Monthly':
+                    creditInfo += ` (Monthly, Start: ${item.startDay})`;
+                    break;
+                case 'Weekly':
+                    const day = WEEKDAYS.find(_ => _.value == item.startDay);
+                    creditInfo += ` (Weekly, Start: ${day? day.label : ''})`;
+                    break;
+            }
+
+            return creditInfo;
+        };
+
     return (
         <Swipeable ref={swipeableRef} renderRightActions={renderRightActions} renderLeftActions={renderLeftActions}>
             <View style={[styles.itemContainer, isSelected && styles.selectedItem]}>
                 <IconDisplay library={item.icon ? item.icon.split('/')[0] : 'Ionicons'} icon={item.icon ? item.icon.split('/')[1] : 'pricetag'} size={24} color="#555" />
-                <Text style={styles.itemText} numberOfLines={1}>
-                    {item.tagName}
-                </Text>
+                <View style={styles.textContainer}>
+                    <Text style={styles.itemText} numberOfLines={1}>
+                        {item.tagName}
+                    </Text>
+                    {getCreditText() && <Text style={styles.creditText}>{getCreditText()}</Text>}
+                </View>
             </View>
         </Swipeable>
     );
@@ -65,11 +93,19 @@ const styles = StyleSheet.create({
     selectedItem: {
         backgroundColor: '#d3f9d8', // Light green for selected items
     },
+    textContainer: {
+        marginLeft: 10,
+        flex: 1,
+    },
     itemText: {
         fontSize: 16,
         color: '#000',
         marginLeft: 10,
         flex: 1,
+    },
+    creditText: {
+        fontSize: 12,
+        color: '#666',
     },
     actionsContainer: {
         flexDirection: 'row',
