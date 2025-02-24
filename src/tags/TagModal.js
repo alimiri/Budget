@@ -85,7 +85,6 @@ const TagModal = ({ visible, onClose, onSave, selectedTag }) => {
     setIcons(nextIcons);
     setPage(nextPage);
   };
-
   return (
     <Modal visible={visible} animationType="slide" transparent={true}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -112,7 +111,7 @@ const TagModal = ({ visible, onClose, onSave, selectedTag }) => {
                   </View>
                   <Text style={styles.label}>Credit Type</Text>
                   <View style={styles.pickerContainer}>
-                    <Picker selectedValue={creditType} onValueChange={setCreditType}>
+                    <Picker selectedValue={creditType} onValueChange={setCreditType} itemStyle={styles.pickerText}>
                       <Picker.Item label="None" value="None" />
                       <Picker.Item label="No Period" value="NoPeriod" />
                       <Picker.Item label="Yearly" value="Yearly" />
@@ -138,7 +137,7 @@ const TagModal = ({ visible, onClose, onSave, selectedTag }) => {
                     <View>
                       <Text style={styles.label}>Start Day</Text>
                       <View style={styles.pickerContainer}>
-                        <Picker selectedValue={startDay} onValueChange={setStartDay}>
+                        <Picker selectedValue={startDay} onValueChange={setStartDay} itemStyle={styles.pickerText}>
                           {WEEKDAYS.map((day) => (
                             <Picker.Item key={day.value} label={day.label} value={day.value} />
                           ))}
@@ -216,6 +215,10 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 8,
     marginBottom: 10,
+    backgroundColor: "#fff",
+  },
+  pickerText: {
+    color: "#000", // Ensures text is visible (try #000 or another visible color)
   },
   inputRow: {
     flexDirection: "row",
