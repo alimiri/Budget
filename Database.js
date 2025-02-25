@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 
 const dbName = 'Budget';
-const currentDbVersion = 4;
+const currentDbVersion = 5;
 
 const TABLES = {
     tags: `CREATE TABLE IF NOT EXISTS tags (
@@ -22,7 +22,8 @@ const TABLES = {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         TransactionDate datetime,
         description TEXT,
-        amount money
+        amount money,
+        sort_order INTEGER
     );`,
     transactionTags: `CREATE TABLE IF NOT EXISTS TransactionTags (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,6 +44,10 @@ const MIGRATIONS = {
             db.execSync("ALTER TABLE tags ADD COLUMN creditAmount REAL DEFAULT NULL;");
             db.execSync("ALTER TABLE tags ADD COLUMN startDay INTEGER DEFAULT NULL;");
           }
+    },
+    5: (db) => {
+        db.execSync("ALTER TABLE Transactions ADD COLUMN sort_order INTEGER NULL;");
+        db.execSync("UPDATE Transactions SET sort_order = id;");
     }
 };
 
@@ -55,9 +60,11 @@ const Database = {
     },
 
     runMigrations: (db) => {
+        console.log('Hello');
         let dbVersion = 1;
         const result = db.prepareSync(`PRAGMA user_version;`).executeSync().getAllSync();
         if (result.length > 0) dbVersion = result[0]["user_version"];
+        console.log(`Current DB version: ${dbVersion}`);
         if (dbVersion < currentDbVersion) {
             for (let version = dbVersion + 1; version <= currentDbVersion; version++) {
                 if (MIGRATIONS[version]) {
@@ -172,10 +179,35 @@ const Database = {
 
     selectTransactions: () => {
         const db = SQLite.openDatabaseSync(dbName);
-        const stmt = db.prepareSync('SELECT * FROM Transactions Order By TransactionDate DESC');
+        const stmt = db.prepareSync('SELECT * FROM Transactions Order By TransactionDate DESC, sort_order DESC');
         const rows = stmt.executeSync().getAllSync();
 
-        const stmt2 = db.prepareSync('SELECT t.* FROM TransactionTags tt INNER JOIN Tags t on t.id = tt.TagId where tt.TransactionId = ?');
+        const stmt2 = db.prepareSync(`
+            SELECT tag.*,
+                (
+                    SELECT SUM(amount)
+                    FROM Transactions _t
+                    WHERE EXISTS (
+                        SELECT 1 FROM TransactionTags _tt
+                        WHERE _tt.TransactionId = _t.id
+                        AND _tt.TagId = tag.id
+                    )
+                    AND (_t.TransactionDate < t.TransactionDate
+                        OR (_t.TransactionDate = t.TransactionDate AND _t.sort_order <= t.sort_order))
+                    AND CASE
+                        WHEN tag.creditType = 'NoPeriod' THEN 1
+                        WHEN tag.creditType = 'Yearly' THEN strftime('%Y', _t.TransactionDate) = strftime('%Y', t.TransactionDate)
+                        WHEN tag.creditType = 'Monthly' THEN strftime('%Y-%m', date(_t.TransactionDate, '-' || (tag.startDay - 1) || ' days')) = strftime('%Y-%m', date(t.TransactionDate, '-' || (tag.startDay - 1) || ' days'))
+                        WHEN tag.creditType = 'Weekly' THEN date(_t.TransactionDate, 'weekday 0', '-' || (tag.startDay - 1) || ' days') = date(t.TransactionDate, 'weekday 0', '-' || (tag.startDay - 1) || ' days')
+                        ELSE 0
+                    END
+                ) AS creditUsed
+            FROM Transactions t
+            INNER JOIN TransactionTags tt ON t.id = tt.TransactionId
+            INNER JOIN Tags tag ON tag.id = tt.TagId
+            WHERE t.id = ?
+        `);
+
         const result = rows.map((row) => {
             const tags = stmt2.executeSync(row.id).getAllSync();
             return { ...row, tags };
@@ -191,6 +223,7 @@ const Database = {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('INSERT INTO Transactions (TransactionDate, description, amount) VALUES (?, ?, ?)');
         const result = stmt.executeSync(transactionDate, description, amount);
+        db.execSync('UPDATE Transactions SET sort_order = last_insert_rowid() WHERE id = last_insert_rowid();');
         const stmt2 = db.prepareSync('INSERT INTO TransactionTags (TransactionId, TagId) VALUES (?, ?)');
         tags.forEach((tagId) => stmt2.executeSync(result.lastInsertRowId, tagId));
 
@@ -198,7 +231,6 @@ const Database = {
         stmt2.finalizeSync();
         db.closeSync();
     },
-
     updateTransaction: (id, transactionDate, description, amount, tags) => {
         const db = SQLite.openDatabaseSync(dbName);
         const stmt = db.prepareSync('UPDATE Transactions SET TransactionDate = ?, description = ?, amount = ? WHERE id = ?');

@@ -117,7 +117,9 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedTags = [], onSe
       {/* Add New Tag Button */}
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => setModalVisible(true)}
+        onPress={() => {
+          setSelectedTag(null);
+          setModalVisible(true);}}
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>

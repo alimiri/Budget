@@ -40,13 +40,20 @@ const TagModal = ({ visible, onClose, onSave, selectedTag }) => {
   useEffect(() => {
     if (selectedTag) {
       setTagName(selectedTag.tagName);
-      setIcon({
-        icon: selectedTag.icon ? selectedTag.icon.split('/')[1] : '',
-        library: selectedTag.icon ? selectedTag.icon.split('/')[0] : ''
-      });
+      setIcon( selectedTag && selectedTag.icon && selectedTag.icon !== '/' ? {
+        icon: selectedTag.icon.split('/')[1],
+        library: selectedTag.icon.split('/')[0]
+      } :
+      null);
       setCreditType(selectedTag.creditType || "None");
       setCreditAmount(selectedTag.creditAmount ? selectedTag.creditAmount.toString() : "");
       setStartDay(selectedTag.startDay ? selectedTag.startDay.toString() : "");
+    } else {
+      setTagName("");
+      setIcon(null);
+      setCreditType("None");
+      setCreditAmount("");
+      setStartDay("");
     }
   }, [selectedTag]);
 
@@ -69,7 +76,7 @@ const TagModal = ({ visible, onClose, onSave, selectedTag }) => {
         creditType === "Weekly" ? startDay : null;
 
     if (tagName.trim() !== "") {
-      onSave({ id: selectedTag.id, tagName, icon, creditType, creditAmount, startDay: validStartDay });
+      onSave({ id: selectedTag ? selectedTag.id : null, tagName, icon, creditType, creditAmount, startDay: validStartDay });
       setTagName("");
       setIcon(null);
       setCreditType("None");
