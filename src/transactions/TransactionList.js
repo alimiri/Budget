@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import TransactionRow from "./TransactionRow";
 import TransactionModal from "./TransactionModal";
-import Database from "../../Database";
+import Database from "../data/Database";
 import IconDisplay from "../icons/IconDisplay";
-import { useSettings } from '../../SettingsContext';
+import { useSettings } from '../settings/SettingsContext';
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 

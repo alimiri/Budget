@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import MainTabs from './MainTabs';
-import Database from './Database';
-import { SettingsProvider } from './SettingsContext';
+import Database from './data/Database';
+import { SettingsProvider } from './settings/SettingsContext';
 
 const App = () => {
   const [columns, setColumns] = useState(4);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TagItem from './TagItem';
 import TagModal from "./TagModal";
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
-import Database from '../../Database';
+import Database from '../data/Database';
 
 const TagsManager = ({ onTagChanged, selectable = false, selectedTags = [], onSelectedChange, onClose }) => {
   const [modalVisible, setModalVisible] = useState(false);

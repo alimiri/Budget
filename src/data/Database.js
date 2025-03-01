@@ -60,11 +60,9 @@ const Database = {
     },
 
     runMigrations: (db) => {
-        console.log('Hello');
         let dbVersion = 1;
         const result = db.prepareSync(`PRAGMA user_version;`).executeSync().getAllSync();
         if (result.length > 0) dbVersion = result[0]["user_version"];
-        console.log(`Current DB version: ${dbVersion}`);
         if (dbVersion < currentDbVersion) {
             for (let version = dbVersion + 1; version <= currentDbVersion; version++) {
                 if (MIGRATIONS[version]) {

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import Database from './Database';
+import Database from '../data/Database';
 
 // Create the Context
 const SettingsContext = createContext();

@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import IconDisplay from './src/icons/IconDisplay';
+import IconDisplay from './icons/IconDisplay';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import TagManager from './src/tags/TagManager';
-import IconAdmin from './src/icons/IconAdmin';
-import Help from './Help';
-import Settings from './Settings';
-import TransactionList from './src/transactions/TransactionList';
-import Database from './Database';
+import TagManager from './tags/TagManager';
+import IconAdmin from './icons/IconAdmin';
+import Help from './help/Help';
+import Settings from './settings/Settings';
+import TransactionList from './transactions/TransactionList';
+import Database from './data/Database';
+import TagReportPage from './reports/TagReportPage';
 
 const Tab = createBottomTabNavigator();
 
 const TabBarIcon = ({ route, focused, size }) => {
   const icons = {
-    Tags: {icon: 'document-attach-outline', library:'Ionicons'},
-    Icons: {icon: 'account-box-multiple-outline', library:'MaterialCommunityIcons'},
-    Transaction: {icon: 'list', library:'Entypo'},
-    Help: {icon: 'help-outline', library:'MaterialIcons'},
-    Settings: {icon: 'settings-outline', library:'Ionicons'},
+    Transaction: { icon: 'list', library: 'Entypo' },
+    Tags: { icon: 'document-attach-outline', library: 'Ionicons' },
+    TagReports: { icon: 'chart-bar', library: 'MaterialCommunityIcons' },
+    Icons: { icon: 'account-box-multiple-outline', library: 'MaterialCommunityIcons' },
+    Help: { icon: 'help-outline', library: 'MaterialIcons' },
+    Settings: { icon: 'settings-outline', library: 'Ionicons' },
   };
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -62,7 +64,7 @@ const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) =>
         name="Transaction"
         children={() => (
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <TransactionList tags={tags} readOnly={false} onTagChanged={onTagChanged}/>
+            <TransactionList tags={tags} readOnly={false} onTagChanged={onTagChanged} />
           </GestureHandlerRootView>
         )}
       />
@@ -71,7 +73,16 @@ const MainTabs = ({ columns, autoPopup, onColumnsChange, onAutoPopupChange }) =>
         name="Tags"
         children={() => (
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <TagManager columns={columns} autoPopup={autoPopup} onTagChanged={onTagChanged}/>
+            <TagManager columns={columns} autoPopup={autoPopup} onTagChanged={onTagChanged} />
+          </GestureHandlerRootView>
+        )}
+      />
+
+      <Tab.Screen
+        name="TagReports"
+        children={() => (
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <TagReportPage />
           </GestureHandlerRootView>
         )}
       />
