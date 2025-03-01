@@ -24,6 +24,8 @@ const TagReportPage = () => {
     setTags(Database.selectTags("", 1000));
   }, []);
 
+  const font = useFont(require("../../assets/Arial.ttf"), 8);
+
   const handleTagChange = (tagId) => {
     const tag = tags.find((t) => t.id == tagId);
     if (tag) {
@@ -40,7 +42,7 @@ const TagReportPage = () => {
       if (creditType === "Yearly") {
         index = new Date(t.TransactionDate).getFullYear();
       } else if (creditType === "Monthly") {
-        index = (new Date(t.TransactionDate).getFullYear()) * 100 + new Date(t.TransactionDate).getMonth();
+        index = (new Date(t.TransactionDate).getFullYear()) * 100 + new Date(t.TransactionDate).getMonth() + 1;
       } else if (creditType === "Weekly") {
       }
       if (!acc[index]) {
@@ -54,99 +56,109 @@ const TagReportPage = () => {
       x: index,
       y: _amounts[index],
     }));
-
+console.log('Ali', amounts);
     return amounts;
   }
 
   const getChartComponent = () => {
     if (!selectedTag) return <Text>Select a tag to view the report.</Text>;
     const { creditType } = selectedTag;
-    const font = useFont(require("../../assets/Arial.ttf"), 24);
+
     const amounts = getChartValues(selectedTag.id, creditType);
     if (amounts.length === 0) {
       return <Text>No data available for this tag.</Text>;
     } else if (creditType === "Yearly" || creditType === "Monthly" || creditType === "Weekly") {
       return (
         <View style={{ height: 300 }}>
-          <CartesianChart data={amounts} xKey="x" yKeys={["y"]}
+          <CartesianChart data={amounts} xKey="x" yKeys={["y"]} domainPadding={{ left: 50, right: 50 }}
             xAxis={{
-              tickCount: 5,
               font,
-              tickFormat: (value) => {
-                if (creditType === "Yearly") {
-                  return value;
-                } else if (creditType === "Monthly") {
-                  console.log(value);
-                  return `${Math.floor(value / 100)}/${value % 100}`;
-                } else if (creditType === "Weekly") {
+              labelPosition: "outset",
+              enableRescaling: false,
+              //labelRotate: 45,
+              formatXLabel: (x) => {
+                if (!x || typeof x !== "string") {
+                  return "";
+                } else {
+                  if (creditType === "Yearly") {
+                    return x;
+                  } else if (creditType === "Monthly") {
+                    console.log('x', x);
+                    const year = x.substring(0, 4);
+                    const month = x.substring(4, 6);
+                    return `${year}/${month}`;
+                  } else if (creditType === "Weekly") {
+                  }
                 }
               }
             }}
-            yAxis={[{}]}
-            >
-          {({ points, chartBounds }) => {
-            return (chartType === "Bar" ? (
-              <Bar
-                points={points.y}
-                chartBounds={chartBounds}
-                color="red"
-                roundedCorners={{ topLeft: 10, topRight: 10 }}
-              />
-            ) : (
-              <Line points={points.y} color="red" strokeWidth={3} />
-            ));
-          }}
-        </CartesianChart>
+            yAxis={[{
+              font,
+            }]}
+          >
+            {({ points, chartBounds }) => {
+              return (chartType === "Bar" ? (
+                <Bar
+                  points={points.y}
+                  chartBounds={chartBounds}
+                  color="red"
+                  roundedCorners={{ topLeft: 10, topRight: 10 }}
+                />
+              ) : (
+                <Line points={points.y} color="red" strokeWidth={3} />
+              ));
+            }}
+          </CartesianChart>
         </View >
       );
     } else {
-  return <Text>No specific report available for this tag type.</Text>;
-}
+      return <Text>No specific report available for this tag type.</Text>;
+    }
   };
 
-return (
-  <FlatList
-    ListHeaderComponent={
-      <View style={{ padding: 16 }}>
-        <Picker selectedValue={selectedTag?.id || ""} onValueChange={handleTagChange}>
-          <Picker.Item label="Select a tag" value="" enabled={false} />
-          {tags.map((tag) => (
-            <Picker.Item key={tag.id} label={tag.tagName} value={tag.id} />
-          ))}
-        </Picker>
+  return (
+    <FlatList
+      ListHeaderComponent={
+        <View style={{ padding: 16 }}>
+          <Picker selectedValue={selectedTag?.id || ""} onValueChange={handleTagChange}>
+            <Picker.Item label="Select a tag" value="" enabled={false} />
+            {tags.map((tag) => (
+              <Picker.Item key={tag.id} label={tag.tagName} value={tag.id} />
+            ))}
+          </Picker>
 
-        {selectedTag && (
-          <Card style={{ padding: 10, marginVertical: 10 }}>
-            <Text>Tag: {selectedTag.tagName}</Text>
-            <Text>Credit Type: {selectedTag.creditType}</Text>
-          </Card>
-        )}
+          {selectedTag && (
+            <Card style={{ padding: 10, marginVertical: 10 }}>
+              <Text>Tag: {selectedTag.tagName}</Text>
+              <Text>Credit Type: {selectedTag.creditType}</Text>
+            </Card>
+          )}
 
-        {/* Radio buttons for chart type selection */}
-        <View style={{ marginVertical: 10 }}>
-          <RadioButton.Group
-            onValueChange={(value) => setChartType(value)}
-            value={chartType}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <RadioButton.Item label="Bar Chart" value="Bar" />
-              <RadioButton.Item label="Line Chart" value="Line" />
-            </View>
-          </RadioButton.Group>
+          {/* Radio buttons for chart type selection */}
+          <View style={{ marginVertical: 10 }}>
+            <RadioButton.Group
+              onValueChange={(value) => setChartType(value)}
+              value={chartType}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RadioButton.Item label="Bar Chart" value="Bar" />
+                <RadioButton.Item label="Line Chart" value="Line" />
+              </View>
+            </RadioButton.Group>
+          </View>
+
+          {getChartComponent()}
         </View>
-
-        {getChartComponent()}
-      </View>
-    }
-    data={transactions.filter((t) => t.tags.includes(selectedTag?.id))}
-    keyExtractor={(item) => item.id.toString()}
-    renderItem={({ item }) => (
-      <Card style={{ padding: 10, marginVertical: 5 }}>
-        <Text>{item.description} - ${item.amount}</Text>
-      </Card>
-    )}
-  />
-);
+      }
+      data={transactions.filter((t) => t.tags.includes(selectedTag?.id))}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => (
+        <Card style={{ padding: 10, marginVertical: 5 }}>
+          <Text>{item.description} - ${item.amount}</Text>
+        </Card>
+      )}
+    />
+  );
 };
 
 export default TagReportPage;
