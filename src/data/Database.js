@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
+import { EventRegister } from 'react-native-event-listeners';
 
 const dbName = 'Budget';
 const currentDbVersion = 5;
@@ -99,6 +100,7 @@ const Database = {
 
         stmt.finalizeSync();
         db.closeSync();
+        EventRegister.emit("settingsUpdated");
     },
 
     selectTags: (tagName, pageSize) => {
@@ -118,6 +120,7 @@ const Database = {
 
         stmt.finalizeSync();
         db.closeSync();
+        EventRegister.emit("tagsUpdated");
     },
 
     updateTag: (tagName, icon, creditType, creditAmount, startDay, id) => {
@@ -127,6 +130,7 @@ const Database = {
 
         stmt.finalizeSync();
         db.closeSync();
+        EventRegister.emit("tagsUpdated");
     },
 
     delTag: (id) => {
@@ -136,6 +140,7 @@ const Database = {
 
         stmt.finalizeSync();
         db.closeSync();
+        EventRegister.emit("tagsUpdated");
     },
 
     selectIcons: () => {
@@ -228,6 +233,8 @@ const Database = {
         stmt.finalizeSync();
         stmt2.finalizeSync();
         db.closeSync();
+        EventRegister.emit("transactionsUpdated");
+        console.log("Transaction inserted");
     },
     updateTransaction: (id, transactionDate, description, amount, tags) => {
         const db = SQLite.openDatabaseSync(dbName);
@@ -244,6 +251,7 @@ const Database = {
         stmt2.finalizeSync();
         stmt3.finalizeSync();
         db.closeSync();
+        EventRegister.emit("transactionsUpdated");
     },
 
     delTransaction: (id) => {
@@ -258,6 +266,7 @@ const Database = {
         stmt.finalizeSync();
         stmt2.finalizeSync();
         db.closeSync();
+        EventRegister.emit("transactionsUpdated");
     }
 };
 
