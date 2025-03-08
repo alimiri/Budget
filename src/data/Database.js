@@ -1,6 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 import { EventRegister } from 'react-native-event-listeners';
+import { CREDIT_TYPES } from '../constants/creditTypes';
 
 const dbName = 'Budget';
 const currentDbVersion = 5;
@@ -10,7 +11,7 @@ const TABLES = {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tagName TEXT UNIQUE,
         icon TEXT,
-        creditType TEXT CHECK (creditType IN ('None', 'NoPeriod', 'Yearly', 'Monthly', 'Weekly')),
+        creditType TEXT CHECK (creditType IN (${CREDIT_TYPES.map(_ => `'${_}'`).join()})),
         creditAmount REAL DEFAULT NULL,
         startDay INTEGER DEFAULT NULL    -- src/constants/weekdays.js
     );`,
@@ -41,7 +42,7 @@ const MIGRATIONS = {
     4: (db) => {
         const columns = db.getAllSync(`PRAGMA table_info(tags);`).map((col) => col.name);
         if (!columns.includes('creditType')) {
-            db.execSync("ALTER TABLE tags ADD COLUMN creditType TEXT CHECK (creditType IN ('None', 'NoPeriod', 'Yearly', 'Monthly', 'Weekly'));");
+            db.execSync(`ALTER TABLE tags ADD COLUMN creditType TEXT CHECK (creditType IN (${Object.values(CREDIT_TYPES).map(_ => `'${_}'`).join()}));`);
             db.execSync("ALTER TABLE tags ADD COLUMN creditAmount REAL DEFAULT NULL;");
             db.execSync("ALTER TABLE tags ADD COLUMN startDay INTEGER DEFAULT NULL;");
           }
@@ -198,10 +199,10 @@ const Database = {
                     AND (_t.TransactionDate < t.TransactionDate
                         OR (_t.TransactionDate = t.TransactionDate AND _t.sort_order <= t.sort_order))
                     AND CASE
-                        WHEN tag.creditType = 'NoPeriod' THEN 1
-                        WHEN tag.creditType = 'Yearly' THEN strftime('%Y', _t.TransactionDate) = strftime('%Y', t.TransactionDate)
-                        WHEN tag.creditType = 'Monthly' THEN strftime('%Y-%m', date(_t.TransactionDate, '-' || (tag.startDay - 1) || ' days')) = strftime('%Y-%m', date(t.TransactionDate, '-' || (tag.startDay - 1) || ' days'))
-                        WHEN tag.creditType = 'Weekly' THEN date(_t.TransactionDate, 'weekday 0', '-' || (tag.startDay - 1) || ' days') = date(t.TransactionDate, 'weekday 0', '-' || (tag.startDay - 1) || ' days')
+                        WHEN tag.creditType = '${CREDIT_TYPES["NoPeriod"]}' THEN 1
+                        WHEN tag.creditType = '${CREDIT_TYPES["Yearly"]}' THEN strftime('%Y', _t.TransactionDate) = strftime('%Y', t.TransactionDate)
+                        WHEN tag.creditType = '${CREDIT_TYPES["Monthly"]}' THEN strftime('%Y-%m', date(_t.TransactionDate, '-' || (tag.startDay - 1) || ' days')) = strftime('%Y-%m', date(t.TransactionDate, '-' || (tag.startDay - 1) || ' days'))
+                        WHEN tag.creditType = '${CREDIT_TYPES["Weekly"]}' THEN date(_t.TransactionDate, 'weekday 0', '-' || (tag.startDay - 1) || ' days') = date(t.TransactionDate, 'weekday 0', '-' || (tag.startDay - 1) || ' days')
                         ELSE 0
                     END
                 ) AS creditUsed
