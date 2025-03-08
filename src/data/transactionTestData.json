@@ -1,0 +1,1938 @@
+[
+  {
+    "id": 1,
+    "TransactionDate": "2024-09-08T22:15:43.071Z",
+    "description": "Entertainment",
+    "amount": 448.68,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "TransactionDate": "2023-10-25T13:30:23.557Z",
+    "description": "Utilities",
+    "amount": 205.59,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "TransactionDate": "2022-10-20T20:23:28.362Z",
+    "description": "Health",
+    "amount": 787.35,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "TransactionDate": "2023-09-11T05:15:26.401Z",
+    "description": "Entertainment",
+    "amount": 444.91,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "TransactionDate": "2024-09-12T02:58:05.482Z",
+    "description": "Education",
+    "amount": 123.09,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "TransactionDate": "2022-02-08T20:11:18.597Z",
+    "description": "Education",
+    "amount": 929.54,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "TransactionDate": "2024-07-29T13:40:29.218Z",
+    "description": "Education",
+    "amount": 719.51,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "TransactionDate": "2022-03-25T19:25:28.429Z",
+    "description": "Dining Out",
+    "amount": 835.02,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "TransactionDate": "2022-10-20T18:04:36.662Z",
+    "description": "Utilities",
+    "amount": 251.98,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "TransactionDate": "2022-02-15T22:26:23.282Z",
+    "description": "Utilities",
+    "amount": 931.36,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "TransactionDate": "2025-01-18T04:54:11.826Z",
+    "description": "Shopping",
+    "amount": 716.2,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "TransactionDate": "2023-04-13T19:00:40.528Z",
+    "description": "Travel",
+    "amount": 338.42,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "TransactionDate": "2024-10-20T09:42:49.454Z",
+    "description": "Groceries",
+    "amount": 690.64,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "TransactionDate": "2023-12-11T22:50:40.580Z",
+    "description": "Dining Out",
+    "amount": 945.59,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "TransactionDate": "2022-09-02T00:36:12.792Z",
+    "description": "Groceries",
+    "amount": 694.47,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "TransactionDate": "2022-01-20T19:54:32.153Z",
+    "description": "Dining Out",
+    "amount": 57.42,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "TransactionDate": "2023-07-30T02:34:38.967Z",
+    "description": "Rent",
+    "amount": 994.66,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "TransactionDate": "2023-11-13T21:16:01.347Z",
+    "description": "Travel",
+    "amount": 308.7,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "TransactionDate": "2022-08-04T22:26:49.106Z",
+    "description": "Education",
+    "amount": 951.9,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "TransactionDate": "2022-11-02T03:59:27.007Z",
+    "description": "Utilities",
+    "amount": 831.02,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "TransactionDate": "2023-02-11T01:40:07.175Z",
+    "description": "Miscellaneous",
+    "amount": 713.58,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "TransactionDate": "2024-10-29T16:56:29.812Z",
+    "description": "Entertainment",
+    "amount": 211.93,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "TransactionDate": "2023-11-10T14:17:12.787Z",
+    "description": "Shopping",
+    "amount": 315.82,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "TransactionDate": "2022-10-31T10:14:01.599Z",
+    "description": "Health",
+    "amount": 5.81,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "TransactionDate": "2024-06-26T04:44:53.227Z",
+    "description": "Rent",
+    "amount": 806.46,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "TransactionDate": "2023-12-06T05:03:01.592Z",
+    "description": "Travel",
+    "amount": 73.55,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "TransactionDate": "2023-10-08T14:42:06.862Z",
+    "description": "Education",
+    "amount": 929.05,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "TransactionDate": "2024-08-08T02:21:56.890Z",
+    "description": "Education",
+    "amount": 985.1,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "TransactionDate": "2022-10-21T00:47:29.398Z",
+    "description": "Groceries",
+    "amount": 790.09,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "TransactionDate": "2023-11-07T09:27:56.602Z",
+    "description": "Rent",
+    "amount": 411.64,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "TransactionDate": "2022-06-12T18:49:17.464Z",
+    "description": "Utilities",
+    "amount": 296.4,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "TransactionDate": "2022-12-19T03:39:50.123Z",
+    "description": "Travel",
+    "amount": 427.23,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "TransactionDate": "2022-04-14T22:56:53.883Z",
+    "description": "Rent",
+    "amount": 765.24,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "TransactionDate": "2024-05-29T18:15:38.509Z",
+    "description": "Shopping",
+    "amount": 520.03,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "TransactionDate": "2023-04-24T11:58:17.922Z",
+    "description": "Dining Out",
+    "amount": 254.79,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "TransactionDate": "2023-12-14T04:57:52.776Z",
+    "description": "Entertainment",
+    "amount": 624.45,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "TransactionDate": "2024-05-02T01:31:29.677Z",
+    "description": "Miscellaneous",
+    "amount": 640.85,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "TransactionDate": "2022-05-30T23:56:27.647Z",
+    "description": "Shopping",
+    "amount": 774.98,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "TransactionDate": "2022-07-04T04:39:11.060Z",
+    "description": "Miscellaneous",
+    "amount": 719.95,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "TransactionDate": "2023-08-23T06:51:19.071Z",
+    "description": "Groceries",
+    "amount": 334.48,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "TransactionDate": "2022-09-06T14:37:45.948Z",
+    "description": "Dining Out",
+    "amount": 729,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "TransactionDate": "2023-07-10T06:07:15.742Z",
+    "description": "Entertainment",
+    "amount": 427.59,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "TransactionDate": "2022-06-05T11:52:27.535Z",
+    "description": "Dining Out",
+    "amount": 873.42,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "TransactionDate": "2024-08-23T14:41:40.181Z",
+    "description": "Miscellaneous",
+    "amount": 516.74,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "TransactionDate": "2024-12-14T20:48:22.536Z",
+    "description": "Dining Out",
+    "amount": 781.43,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "TransactionDate": "2024-09-19T21:03:03.295Z",
+    "description": "Groceries",
+    "amount": 318.42,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "TransactionDate": "2022-01-22T08:48:26.837Z",
+    "description": "Utilities",
+    "amount": 793.05,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "TransactionDate": "2023-04-12T09:00:45.309Z",
+    "description": "Groceries",
+    "amount": 479.48,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "TransactionDate": "2023-08-04T00:02:22.366Z",
+    "description": "Utilities",
+    "amount": 977.38,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "TransactionDate": "2023-05-25T18:35:43.186Z",
+    "description": "Groceries",
+    "amount": 194.9,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "TransactionDate": "2025-02-21T16:30:29.783Z",
+    "description": "Health",
+    "amount": 313.78,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "TransactionDate": "2023-10-07T13:52:42.804Z",
+    "description": "Education",
+    "amount": 677.24,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "TransactionDate": "2022-02-09T09:29:27.351Z",
+    "description": "Rent",
+    "amount": 19.53,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 54,
+    "TransactionDate": "2023-03-17T00:43:55.115Z",
+    "description": "Groceries",
+    "amount": 605.08,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 55,
+    "TransactionDate": "2023-07-03T11:57:13.002Z",
+    "description": "Rent",
+    "amount": 165.69,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 56,
+    "TransactionDate": "2024-04-19T08:39:18.276Z",
+    "description": "Miscellaneous",
+    "amount": 309.65,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 57,
+    "TransactionDate": "2023-12-07T08:53:09.933Z",
+    "description": "Rent",
+    "amount": 574.78,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 58,
+    "TransactionDate": "2022-10-16T21:13:13.692Z",
+    "description": "Groceries",
+    "amount": 524.38,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 59,
+    "TransactionDate": "2022-10-31T03:13:54.687Z",
+    "description": "Utilities",
+    "amount": 879.49,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 60,
+    "TransactionDate": "2023-03-31T05:54:03.489Z",
+    "description": "Education",
+    "amount": 652.66,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 61,
+    "TransactionDate": "2022-07-19T11:21:58.583Z",
+    "description": "Travel",
+    "amount": 485.64,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 62,
+    "TransactionDate": "2024-07-15T01:00:04.325Z",
+    "description": "Shopping",
+    "amount": 276.58,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "TransactionDate": "2022-01-28T11:31:48.101Z",
+    "description": "Rent",
+    "amount": 653.24,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 64,
+    "TransactionDate": "2023-10-22T16:30:18.381Z",
+    "description": "Shopping",
+    "amount": 545.97,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 65,
+    "TransactionDate": "2024-11-19T07:19:50.956Z",
+    "description": "Utilities",
+    "amount": 398.34,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 66,
+    "TransactionDate": "2022-02-11T23:24:00.357Z",
+    "description": "Rent",
+    "amount": 291.53,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 67,
+    "TransactionDate": "2023-10-04T11:58:31.224Z",
+    "description": "Miscellaneous",
+    "amount": 597.94,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "TransactionDate": "2023-05-01T00:21:55.776Z",
+    "description": "Shopping",
+    "amount": 519.93,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 69,
+    "TransactionDate": "2022-09-16T13:46:52.501Z",
+    "description": "Education",
+    "amount": 211.28,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "TransactionDate": "2024-12-17T01:13:00.483Z",
+    "description": "Entertainment",
+    "amount": 724.96,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "TransactionDate": "2024-06-09T15:50:12.966Z",
+    "description": "Health",
+    "amount": 851.46,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 72,
+    "TransactionDate": "2023-02-11T22:27:46.746Z",
+    "description": "Shopping",
+    "amount": 281.83,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 73,
+    "TransactionDate": "2025-02-26T06:37:25.335Z",
+    "description": "Health",
+    "amount": 232.7,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 74,
+    "TransactionDate": "2024-10-24T09:00:28.474Z",
+    "description": "Groceries",
+    "amount": 314.56,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 75,
+    "TransactionDate": "2024-07-19T20:57:32.082Z",
+    "description": "Rent",
+    "amount": 40.5,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 76,
+    "TransactionDate": "2024-06-28T21:21:33.604Z",
+    "description": "Miscellaneous",
+    "amount": 680.8,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 77,
+    "TransactionDate": "2025-02-16T01:24:19.328Z",
+    "description": "Rent",
+    "amount": 241.18,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 78,
+    "TransactionDate": "2022-10-19T10:27:21.625Z",
+    "description": "Rent",
+    "amount": 489.62,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "TransactionDate": "2024-04-25T10:04:41.198Z",
+    "description": "Health",
+    "amount": 587.02,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "TransactionDate": "2025-02-03T23:47:19.196Z",
+    "description": "Groceries",
+    "amount": 236.76,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 81,
+    "TransactionDate": "2024-04-06T03:26:01.245Z",
+    "description": "Travel",
+    "amount": 415.41,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "TransactionDate": "2023-04-21T08:56:14.975Z",
+    "description": "Dining Out",
+    "amount": 858.64,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "TransactionDate": "2022-03-23T11:52:37.070Z",
+    "description": "Health",
+    "amount": 10.67,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 84,
+    "TransactionDate": "2023-03-10T04:13:58.382Z",
+    "description": "Rent",
+    "amount": 514.99,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 85,
+    "TransactionDate": "2022-01-27T21:15:00.973Z",
+    "description": "Utilities",
+    "amount": 486.95,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 86,
+    "TransactionDate": "2024-11-16T16:55:00.843Z",
+    "description": "Miscellaneous",
+    "amount": 521.86,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 87,
+    "TransactionDate": "2022-06-15T01:15:30.460Z",
+    "description": "Entertainment",
+    "amount": 275.15,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 88,
+    "TransactionDate": "2022-09-10T04:02:50.504Z",
+    "description": "Health",
+    "amount": 134.31,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 89,
+    "TransactionDate": "2023-02-20T17:06:33.182Z",
+    "description": "Utilities",
+    "amount": 80.42,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 90,
+    "TransactionDate": "2025-01-16T07:17:15.864Z",
+    "description": "Utilities",
+    "amount": 924.03,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 91,
+    "TransactionDate": "2022-05-16T08:11:52.246Z",
+    "description": "Travel",
+    "amount": 556.71,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 92,
+    "TransactionDate": "2023-07-24T15:57:51.785Z",
+    "description": "Entertainment",
+    "amount": 330.8,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 93,
+    "TransactionDate": "2023-12-21T08:28:17.620Z",
+    "description": "Education",
+    "amount": 604.22,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 94,
+    "TransactionDate": "2022-06-02T03:23:38.618Z",
+    "description": "Utilities",
+    "amount": 389.75,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 95,
+    "TransactionDate": "2023-03-02T00:39:37.931Z",
+    "description": "Health",
+    "amount": 49.92,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 96,
+    "TransactionDate": "2022-11-29T07:11:29.822Z",
+    "description": "Utilities",
+    "amount": 829.62,
+    "tags": [
+      {
+        "id": 4,
+        "tagName": "Mock",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 97,
+    "TransactionDate": "2022-06-06T18:21:59.911Z",
+    "description": "Groceries",
+    "amount": 827.44,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 98,
+    "TransactionDate": "2023-07-01T00:49:53.391Z",
+    "description": "Utilities",
+    "amount": 265.03,
+    "tags": [
+      {
+        "id": 3,
+        "tagName": "Urgent",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 99,
+    "TransactionDate": "2023-12-05T06:54:07.926Z",
+    "description": "Travel",
+    "amount": 100.24,
+    "tags": [
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "TransactionDate": "2023-04-18T21:50:02.553Z",
+    "description": "Groceries",
+    "amount": 100.39,
+    "tags": [
+      {
+        "id": 1,
+        "tagName": "Work",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      },
+      {
+        "id": 2,
+        "tagName": "Personal",
+        "icon": "",
+        "creditType": "None",
+        "creditAmount": null,
+        "startDay": null
+      }
+    ]
+  }
+]
