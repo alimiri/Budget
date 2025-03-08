@@ -10,7 +10,7 @@ export const getChartValues = (tag, transactions) => {
 
       let index;
       const transactionDate = new Date(t.TransactionDate);
-      const year = transactionDate.getFullYear();
+      let year = transactionDate.getFullYear();
 
       if (creditType === "Yearly") {
         index = year;
@@ -37,13 +37,13 @@ export const getChartValues = (tag, transactions) => {
         const weekStartDate = new Date(transactionDate);
         weekStartDate.setDate(transactionDate.getDate() - daysToStart);
 
-        // Compute the week number (YYYYWW)
-        const weekYear = weekStartDate.getFullYear();
-        const weekNumber = Math.ceil(
-          ((weekStartDate - new Date(weekYear, 0, 1)) / 86400000 + 1) / 7
-        );
+        // Adjust the week start date to the correct start day
+        if (weekStartDate.getDay() !== startDay) {
+          weekStartDate.setDate(weekStartDate.getDate() - ((weekStartDate.getDay() + 7 - startDay) % 7));
+        }
 
-        index = weekYear * 100 + weekNumber;
+        // Format the start of the week as a string (YYYY-MM-DD)
+        index = weekStartDate.toISOString().split('T')[0];
       } else {
         index = transactionDate.toISOString().split('T')[0]; // Use full date
       }
