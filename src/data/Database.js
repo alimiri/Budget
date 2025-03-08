@@ -11,7 +11,7 @@ const TABLES = {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tagName TEXT UNIQUE,
         icon TEXT,
-        creditType TEXT CHECK (creditType IN (${CREDIT_TYPES.map(_ => `'${_}'`).join()})),
+        creditType TEXT CHECK (creditType IN (${Object.values(CREDIT_TYPES).map(_ => `'${_}'`).join()})),
         creditAmount REAL DEFAULT NULL,
         startDay INTEGER DEFAULT NULL    -- src/constants/weekdays.js
     );`,
