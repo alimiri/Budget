@@ -19,8 +19,8 @@ export const SettingsProvider = ({ children }) => {
   useEffect(() => {
     const loadSettings = async () => {
       const settings = await Database.getSettings();
-      setPeriodType(settings?.ShowTransactions?.periodType || 'lastNDays');
-      setNDays(settings?.ShowTransactions?.nDays?.toString() || '7');
+      setPeriodType(settings?.ShowTransactions?.periodType || 'monthly');
+      setNDays(settings?.ShowTransactions?.nDays?.toString() || '1');
       setFirstDayOfMonth(settings?.ShowTransactions?.firstDayOfMonth?.toString() || '1');
       setShowCreditPercent(settings?.Tags?.showCreditPercent || false);
       setShowCreditAmount(settings?.Tags?.showCreditAmount || false);

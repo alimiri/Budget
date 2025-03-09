@@ -3,6 +3,7 @@ import TagItem from './TagItem';
 import TagModal from "./TagModal";
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
 import Database from '../data/Database';
+import EventBus from "../EventBus";
 
 const TagsManager = ({ onTagChanged, selectable = false, selectedTags = [], onSelectedChange, onClose }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -17,6 +18,16 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedTags = [], onSe
       fetchTags();
     }
   }, [searchQuery]);
+
+  useEffect(() => {
+    const tagListener = EventBus.on("tagsUpdated", () => {
+      setTags(Database.selectTags("", 1000));
+    });
+
+    return () => {
+      EventBus.off(tagListener);
+    };
+  }, []);
 
   useEffect(() => {
     async function func() {

@@ -21,7 +21,6 @@ const TagReportPage = () => {
 
   useEffect(() => {
     const transListener = EventBus.on("transactionsUpdated", () => {
-      console.log("Transactions updated");
       setTransactions(Database.selectTransactions());
     });
 
