@@ -1,6 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
-import { EventRegister } from 'react-native-event-listeners';
+import EventBus from "../EventBus";
 import { CREDIT_TYPES } from '../constants/creditTypes';
 
 const dbName = 'Budget';
@@ -101,7 +101,7 @@ const Database = {
 
         stmt.finalizeSync();
         db.closeSync();
-        EventRegister.emit("settingsUpdated");
+        EventBus.emit("settingsUpdated");
     },
 
     selectTags: (tagName, pageSize) => {
@@ -121,7 +121,7 @@ const Database = {
 
         stmt.finalizeSync();
         db.closeSync();
-        EventRegister.emit("tagsUpdated");
+        EventBus.emit("tagsUpdated");
     },
 
     updateTag: (tagName, icon, creditType, creditAmount, startDay, id) => {
@@ -131,7 +131,7 @@ const Database = {
 
         stmt.finalizeSync();
         db.closeSync();
-        EventRegister.emit("tagsUpdated");
+        EventBus.emit("tagsUpdated");
     },
 
     delTag: (id) => {
@@ -141,7 +141,7 @@ const Database = {
 
         stmt.finalizeSync();
         db.closeSync();
-        EventRegister.emit("tagsUpdated");
+        EventBus.emit("tagsUpdated");
     },
 
     selectIcons: () => {
@@ -234,7 +234,7 @@ const Database = {
         stmt.finalizeSync();
         stmt2.finalizeSync();
         db.closeSync();
-        EventRegister.emit("transactionsUpdated");
+        EventBus.emit("transactionsUpdated");
         console.log("Transaction inserted");
     },
     updateTransaction: (id, transactionDate, description, amount, tags) => {
@@ -252,7 +252,7 @@ const Database = {
         stmt2.finalizeSync();
         stmt3.finalizeSync();
         db.closeSync();
-        EventRegister.emit("transactionsUpdated");
+        EventBus.emit("transactionsUpdated");
     },
 
     delTransaction: (id) => {
@@ -267,7 +267,7 @@ const Database = {
         stmt.finalizeSync();
         stmt2.finalizeSync();
         db.closeSync();
-        EventRegister.emit("transactionsUpdated");
+        EventBus.emit("transactionsUpdated");
     }
 };
 

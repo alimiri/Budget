@@ -5,7 +5,7 @@ import { Bar, CartesianChart, Line } from "victory-native";
 import { Card, RadioButton } from "react-native-paper";
 import Database from "../data/Database";
 import { useFont } from "@shopify/react-native-skia";
-import { EventRegister } from "react-native-event-listeners";
+import EventBus from "../EventBus";
 import { getChartValues } from "./chartUtils";
 
 const TagReportPage = () => {
@@ -20,18 +20,18 @@ const TagReportPage = () => {
   }, []);
 
   useEffect(() => {
-    const transListener = EventRegister.addEventListener("transactionsUpdated", () => {
+    const transListener = EventBus.on("transactionsUpdated", () => {
       console.log("Transactions updated");
       setTransactions(Database.selectTransactions());
     });
 
-    const tagListener = EventRegister.addEventListener("tagsUpdated", () => {
+    const tagListener = EventBus.on("tagsUpdated", () => {
       setTags(Database.selectTags("", 1000));
     });
 
     return () => {
-      EventRegister.removeEventListener(transListener);
-      EventRegister.removeEventListener(tagListener);
+      EventBus.off(transListener);
+      EventBus.off(tagListener);
     };
   }, []);
 
