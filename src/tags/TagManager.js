@@ -103,7 +103,7 @@ const TagsManager = ({ onTagChanged, selectable = false, selectedTags = [], onSe
       <View style={styles.inputRow}>
         <TextInput
           style={styles.input}
-          placeholder="Search or add a tag..."
+          placeholder="Search..."
           value={searchQuery}
           onChangeText={setSearchQuery}
         />

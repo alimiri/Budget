@@ -260,7 +260,7 @@ const TransactionList = ({ tags, readOnly = false }) => {
             {summary.tags.filter(_ => !externalFilter.tags.some(et => et === _)).map((tag) => (
               <TouchableOpacity key={tag} style={styles.iconButton} onPress={() => setExternalFilter((prev) => ({ ...prev, tags: [...prev.tags, tag] }))}>
                 <Text style={styles.iconText}>
-                  {tags.find((_) => _.id === tag)?.tagName || "Unknown"}
+                  {tags.find((_) => _.id == tag)?.tagName || "Unknown"}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -276,7 +276,7 @@ const TransactionList = ({ tags, readOnly = false }) => {
                 >
                   <Text style={styles.activeFilterText}>
                     {type === "tags"
-                      ? tags.find((tag) => tag.id === index)?.tagName || "Unknown"
+                      ? tags.find((tag) => tag.id == index)?.tagName || "Unknown"
                       : type === "months"
                         ? monthNames[index]
                         : index}
